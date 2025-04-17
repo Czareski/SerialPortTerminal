@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:SzeregowaAvalonia.Views"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="900"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="1200"
         x:Class="SzeregowaAvalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="SzeregowaAvalonia"
@@ -19,19 +19,20 @@
 				<Setter Property="Margin" Value="5"/>
 				<Setter Property="Background" Value="#FF5F3B"/>
 			</Style>
-
 			<Style Selector="TextBlock.TopPanelElement">
 				<Setter Property="Margin" Value="50 0 50 0"/>
-				
+				<Setter Property="Foreground" Value="Black"></Setter>
 			</Style>
 			<Style Selector="Button.TopPanelElement">
 				<Setter Property="Margin" Value="50 0 50 0"/>
+				<Setter Property="Foreground" Value="Black"></Setter>
 			</Style>
 			<Style Selector="TextBlock.Param_name">
 				<Setter Property="FontFamily" Value="Lato-Bold"/>
 				<Setter Property="FontWeight" Value="900"/>
 				<Setter Property="FontSize" Value="30"/>
 				<Setter Property="TextAlignment" Value="Center"/>
+				<Setter Property="Foreground" Value="Black"></Setter>
 			</Style>
 			<Style Selector="Border.Params_block">
 				<Setter Property="Padding" Value="10"/>
@@ -39,11 +40,26 @@
 			</Style>
 			<Style Selector="ComboBox">
 				<Setter Property="Margin" Value="0 10 0 0"/>
+				<Setter Property="Foreground" Value="Black"></Setter>
 			</Style>
-			<Style Selector="TextBlock.recieved">
-				<Setter Property="Foreground" Value="Red"/>
-				<Setter Property="Background" Value="Black"/>
+			<Style Selector="StackPanel.Main">
+				<Setter Property="Background" Value="#cccccc"></Setter>
+			</Style>
+			<Style Selector="TextBlock.Line:pointerover">
+				<Setter Property="Background" Value="LightBlue"/>
+			</Style>
+			<Style Selector="Button.RecievePanelButton">
+				<Setter Property="Background" Value="#000000"/>
+				<Setter Property="Foreground" Value="white"/>
+			</Style>
+			<Style Selector="ScrollViewer.Output">
+				<Setter Property="Background" Value="#000000"/>
+				<Setter Property="Foreground" Value="Green"/>
 			</Style>
 		</Window.Styles>
-	    <views:MainView />
+		<StackPanel Classes="Main">
+			<views:SettingsView/>
+			<views:RecieveView/>
+			<views:SendView/>
+		</StackPanel>
 </Window>

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SzeregowaAvalonia.Views.MainView"
+             x:Class="SzeregowaAvalonia.Views.SettingsView"
              x:DataType="vm:MainViewModel">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
@@ -16,15 +16,15 @@
 	<Grid RowDefinitions="Auto, *">
         
         <!-- Panel górny -->
-        <Border Name="TopPanel" Padding="10" Grid.Row="0">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <!-- Górna część zawsze widoczna -->
+		<Border Name="TopPanel" Padding="10" Grid.Row="0">
+			<StackPanel Classes="TopPanel" Orientation="Vertical" HorizontalAlignment="Center">
+				<!-- Górna część zawsze widoczna -->
 				<Grid ColumnDefinitions="*,*,*,*,*,*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 					<StackPanel Grid.Column="0" Orientation="Horizontal">
 						<Ellipse Fill="{Binding ConnectionStatusColor}" Height="20" Width="20"/>
 						<Button Content="{Binding ConnectButtonText}"  Command="{Binding ConnectCommand}" Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
 					</StackPanel>
-					
+
 					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Text="{Binding PortNameInfo}"/>
 					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Text="{Binding BaudRateInfo}"/>
 					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Text="{Binding DataBitsInfo}"/>
@@ -33,7 +33,7 @@
 					<Button Classes="TopPanelElement" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="6" x:Name="ToggleButton" Content="▲" Click="TogglePanel"/>
 				</Grid>
 
-                <!-- Ukrywana dolna część -->
+				<!-- Ukrywana dolna część -->
 				<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0 20 0 0">
 					<!-- KOLUMNA 1: COM PORT -->
 					<StackPanel Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 20 0">
@@ -119,30 +119,8 @@
 						</StackPanel>
 					</StackPanel>
 				</Grid>
-            </StackPanel>
-        </Border>
-
-        <!-- Treść główna -->
-        <Border Background="White" Grid.Row="1">
-			<StackPanel Margin="10" Spacing="10">
-
-				<!-- Pasek narzędzi: Szukaj + Wyczyść -->
-				<StackPanel Orientation="Horizontal" Spacing="10">
-					<TextBox Width="200" Watermark="Szukaj..." Text="{Binding SearchQuery}"/>
-					<Button Content="Szukaj" Command="{Binding SearchCommand}" />
-					<Button Content="Wyczyść" Command="{Binding ClearCommand}" />
-				</StackPanel>
-
-				<!-- Pole odbioru -->
-				<ScrollViewer Height="400" VerticalScrollBarVisibility="Auto">
-					<TextBlock Classes="recieved" Text="{Binding ReceivedText}"
-							   TextWrapping="Wrap"
-							   FontFamily="Consolas"
-							   FontSize="14"/>
-				</ScrollViewer>
-
 			</StackPanel>
-        </Border>
+		</Border>
     </Grid>
 	
 	

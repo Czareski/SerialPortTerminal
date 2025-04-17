@@ -6,6 +6,7 @@
 	<Application.Resources>
 		<FontFamily x:Key="Lato-Bold">/Assets/Fonts/Lato-Bold.ttf</FontFamily>
 	</Application.Resources>
+	
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>

@@ -7,11 +7,11 @@ using Avalonia.Interactivity;
 
 namespace SzeregowaAvalonia.Views;
 
-public partial class MainView : UserControl
+public partial class SettingsView : UserControl
 {
     private bool _isCollapsed = false;
 
-    public MainView()
+    public SettingsView()
     {
         InitializeComponent();
     }

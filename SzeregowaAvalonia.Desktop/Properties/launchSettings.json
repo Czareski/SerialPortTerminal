@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "SzeregowaAvalonia.Desktop": {
+      "commandName": "Project",
+      "hotReloadEnabled": false
+    },
+    "Profil 1": {
+      "commandName": "Project"
+    }
+  }
+}

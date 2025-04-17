@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SzeregowaAvalonia.Views.RecieveView"
+             x:DataType="vm:RecieveViewModel">
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+	</Design.DataContext>
+	<Border Grid.Row="1">
+		<StackPanel Margin="10" Spacing="10">
+
+			<!-- Pasek narzędzi: Szukaj + Wyczyść -->
+			<StackPanel Orientation="Horizontal" Spacing="10">
+				<TextBlock Text="{Binding BytesRecieved}"/>
+				<TextBox Width="200" Watermark="Szukaj..." Text="{Binding InputText, Mode=TwoWay}" TextChanged="SearchFieldUpdated"/>
+				<Button Classes="RecievePanelButton" Content="Next" Command="{Binding SearchNext}" />
+				<Button Classes="RecievePanelButton" Content="Clear" Command="{Binding Clear}" />
+				<Button Classes="RecievePanelButton" Content="{Binding LoggingButtonContent}" Command="{Binding HandleLogButton}" />
+				<RadioButton Command="{Binding ChangeEncoding}" CommandParameter="{x:True}" Content="ASCII"/>
+				<RadioButton Command="{Binding ChangeEncoding}" CommandParameter="{x:False}" Content="HEX"/>
+			</StackPanel>
+
+			<!-- Pole odbioru -->
+			<ScrollViewer Offset="{Binding Terminal.Scroll.Offset}" Classes="Output" VerticalScrollBarVisibility="Auto" Height="400" LayoutUpdated="OnLayoutUpdated">
+				<ItemsControl ItemsSource="{Binding Terminal.Lines}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<SelectableTextBlock Background="{Binding Background}" Foreground="White" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="15"/>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+		</StackPanel>
+	</Border>
+</UserControl>

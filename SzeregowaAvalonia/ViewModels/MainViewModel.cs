@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using SzeregowaAvalonia.Model;
 
 namespace SzeregowaAvalonia.ViewModels;
 
@@ -47,11 +48,8 @@ public partial class MainViewModel : ViewModelBase
     public IRelayCommand<string> DataBitsCommand { get; }
     public IRelayCommand ConnectCommand { get; }
     public IRelayCommand ScanPortsCommand { get; }
-    public static MainViewModel Instance;
     public MainViewModel()
     {
-        Instance = this;
-
         BaudRateCommand = new RelayCommand<string>(BaudRate_Changed);
         StopBitsCommand = new RelayCommand<string>(StopBits_Changed);
         ParityCommand = new RelayCommand<string>(Parity_Changed);
@@ -59,8 +57,8 @@ public partial class MainViewModel : ViewModelBase
         ConnectCommand = new RelayCommand(ConnectWithSerialPort);
         ScanPortsCommand = new RelayCommand(ScanPorts);
 
-        serialPortManager = new SerialPortManager(new ListBox());
-        foreach (string com in serialPortManager.GetPortNames())
+        
+        foreach (string com in SerialPortManager.Instance.GetPortNames())
         {
             ComPorts.Add(com);
         }
@@ -105,7 +103,7 @@ public partial class MainViewModel : ViewModelBase
         portParameters.baudRate = Convert.ToInt32(content);
         if (isConnected)
         {
-            serialPortManager.ChangeBaudRate(portParameters.baudRate);
+            SerialPortManager.Instance.ChangeBaudRate(portParameters.baudRate);
             BaudRateInfo = "Baud rate: " + portParameters.baudRate;
         }
         
@@ -114,7 +112,7 @@ public partial class MainViewModel : ViewModelBase
     {
         if (isConnected)
         {
-            serialPortManager.ClosePort();
+            SerialPortManager.Instance.ClosePort();
             ConnectButtonText = "Connect";
             ConnectionStatusColor = "#ff0000";
             isConnected = false;
@@ -122,7 +120,7 @@ public partial class MainViewModel : ViewModelBase
         }
 
         portParameters.portName = SelectedPort;
-        bool isSerialPortOpened = serialPortManager.OpenPort(portParameters);
+        bool isSerialPortOpened = SerialPortManager.Instance.OpenPort(portParameters);
         if (isSerialPortOpened)
         {
             ConnectionStatusColor = "#00ff00";
@@ -139,21 +137,10 @@ public partial class MainViewModel : ViewModelBase
     public void ScanPorts()
     {
         ComPorts.Clear();
-        foreach (string com in serialPortManager.GetPortNames())
+        foreach (string com in SerialPortManager.Instance.GetPortNames())
         {
             ComPorts.Add(com);
         }
-    }
-
-    public void AppendReceivedLine(string line)
-    {
-        System.Diagnostics.Debug.WriteLine(line);
-        ReceivedText += line;
-    }
-
-    private void ClearReceived()
-    {
-        ReceivedText = "START";
     }
 
 

@@ -1,0 +1,157 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SzeregowaAvalonia.Views.SendView"
+             x:DataType="vm:SendViewModel">
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+	</Design.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		
+		<StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+			<TextBox Height="10" Width="400" Text="{Binding CommandText, Mode=TwoWay}"></TextBox>
+			<ComboBox Margin="5 0 0 0" Height="10" SelectedIndex="{Binding SelectedLineEnding}">
+				<ComboBoxItem>None</ComboBoxItem>
+				<ComboBoxItem>CR</ComboBoxItem>
+				<ComboBoxItem>NL</ComboBoxItem>
+				<ComboBoxItem>CR+NL</ComboBoxItem>
+				<ComboBoxItem>NL+CR</ComboBoxItem>
+			</ComboBox>
+			<Button Classes="RecievePanelButton" IsDefault="True" Command="{Binding SendCommand}" HorizontalContentAlignment="Center" Margin="5 0 0 0">Send</Button>
+		</StackPanel>
+
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="50"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Pierwszy rząd -->
+			<Button Grid.Row="0" Grid.Column="0">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="help"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="1">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="Tz-80"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="2">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="10/30"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="3">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="25/60"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="4">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T-1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="5">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T-0.1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="6">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="50c_0H"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="7">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T3-2"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="8">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T3+0.1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="0" Grid.Column="9">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="+0.1"/>
+				</Viewbox>
+			</Button>
+
+			<!-- Drugi rząd -->
+			<Button Grid.Row="1" Grid.Column="0">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="+1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="1">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="+10"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="2">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="reset"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="3">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="update"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="4">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="cfg"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="5">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="H+1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="6">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T+2"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="7">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T 0.1"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="8">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T 0.01"/>
+				</Viewbox>
+			</Button>
+			<Button Grid.Row="1" Grid.Column="9">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Text="T3-0.1"/>
+				</Viewbox>
+			</Button>
+		</Grid>
+		<StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<Button HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding BuyMusicCommand}">Edit Macros</Button>
+		</StackPanel>
+	</Grid>
+</UserControl>

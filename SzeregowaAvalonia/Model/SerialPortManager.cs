@@ -8,18 +8,23 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using SzeregowaAvalonia.ViewModels;
+using SzeregowaAvalonia.Views;
 
-namespace SzeregowaAvalonia.Views;
+namespace SzeregowaAvalonia.Model;
+
+public delegate void DataRecieved(byte data);
 class SerialPortManager
 {
+    public static SerialPortManager Instance;
     private SerialPort _serialPort;
-    private ListBox dataRecievedList;
+    public event DataRecieved dataRecievedEvent;
 
-
-    public SerialPortManager(ListBox _dataRecievedList)
+    public SerialPortManager()
     {
-        dataRecievedList = _dataRecievedList;
-
+        if (Instance == null)
+        {
+            Instance = this;
+        }
     }
 
     public string[] GetPortNames()
@@ -30,12 +35,6 @@ class SerialPortManager
 
     public bool OpenPort(PortParameters param)
     {
-        dataRecievedList.Items.Add(param.portName);
-        dataRecievedList.Items.Add(param.baudRate);
-        dataRecievedList.Items.Add(param.dataBits);
-        dataRecievedList.Items.Add(param.parity);
-        dataRecievedList.Items.Add(param.stopBits);
-
         try
         {
             _serialPort = new SerialPort
@@ -69,13 +68,12 @@ class SerialPortManager
         try
         {
             SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadLine();
-
-            // Wyświetlamy otrzymane dane wraz z czasem
-            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+            while (sp.BytesToRead > 0)
             {
-                MainViewModel.Instance.AppendReceivedLine(indata);
-            });
+                int indata = sp.ReadByte();
+                
+                dataRecievedEvent.Invoke((byte)indata);
+            }
         } catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine(ex.Message);
@@ -84,6 +82,14 @@ class SerialPortManager
     public void SendMessage(string message)
     {
         _serialPort.Write(message);
+    }
+    public void SendMessage(byte hexValue)
+    {
+        _serialPort.Write("" + (char)hexValue);
+    }
+    public void SendMessage(char value)
+    {
+        _serialPort.Write("" + value);
     }
     public void ClosePort()
     {
@@ -100,4 +106,5 @@ class SerialPortManager
             _serialPort.Dispose();
         }
     }
+
 }
