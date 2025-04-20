@@ -25,6 +25,7 @@ class SerialPortManager
         {
             Instance = this;
         }
+        _serialPort = new SerialPort();
     }
 
     public string[] GetPortNames()
@@ -33,24 +34,63 @@ class SerialPortManager
     }
 
 
-    public bool OpenPort(PortParameters param)
+    public void SetPortName(string value)
+    {
+        _serialPort.PortName = value;
+    }
+    public void SetParity(string value)
+    {
+        if (Enum.TryParse(value, out Parity parity))
+        {
+            _serialPort.Parity = parity;
+        }
+    }
+    public bool SetBaudRate(string value)
+    {
+        if (int.TryParse(value, out int baudRate)) { 
+            _serialPort.BaudRate = baudRate;
+            return true;
+        }
+        return false;
+        
+    }
+    public void SetDataBits(string value)
+    {
+        if (int.TryParse(value, out int dataBits))
+        {
+            _serialPort.DataBits = dataBits;
+        } else
+        {
+
+        }
+        
+    }
+    public void SetStopBits(string value)
+    {
+        switch (value)
+        {
+            case "1":
+                _serialPort.StopBits = StopBits.One;
+                break;
+            case "2":
+                _serialPort.StopBits = StopBits.Two;
+                break;
+            case "1.5":
+                _serialPort.StopBits = StopBits.OnePointFive;
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    public bool OpenPort()
     {
         try
         {
-            _serialPort = new SerialPort
-            {
-                PortName = param.portName,
-                BaudRate = param.baudRate,
-                DataBits = param.dataBits,
-                Parity = param.parity,
-                StopBits = param.stopBits
-            };
-
             // Dodajemy obsługę zdarzenia DataReceived
             _serialPort.DataReceived += SerialPort_DataReceived;
-
             _serialPort.Open();
-            Console.WriteLine("Połączono z portem " + param.portName);
             return true;
         }
         catch (Exception ex)
@@ -58,10 +98,6 @@ class SerialPortManager
             System.Diagnostics.Debug.WriteLine(ex.Message);
             return false;
         }
-    }
-    public void ChangeBaudRate(int newValue)
-    {
-        _serialPort.BaudRate = newValue;
     }
     private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
@@ -105,6 +141,30 @@ class SerialPortManager
             }
             _serialPort.Dispose();
         }
+    }
+    public string GetPortName()
+    {
+        return _serialPort.PortName;
+    }
+
+    public Parity GetParity()
+    {
+        return _serialPort.Parity;
+    }
+
+    public int GetBaudRate()
+    {
+        return _serialPort.BaudRate;
+    }
+
+    public int GetDataBits()
+    {
+        return _serialPort.DataBits;
+    }
+
+    public StopBits GetStopBits()
+    {
+        return _serialPort.StopBits;
     }
 
 }

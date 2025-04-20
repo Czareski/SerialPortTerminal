@@ -14,7 +14,6 @@ public partial class RecieveView : UserControl
     public RecieveView()
     {
         InitializeComponent();
-        this.DataContext = new RecieveViewModel();
     }
     private void OnLayoutUpdated(object? sender, EventArgs e)
     {

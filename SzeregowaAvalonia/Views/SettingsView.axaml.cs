@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Runtime.Serialization;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using SzeregowaAvalonia.ViewModels;
 
 namespace SzeregowaAvalonia.Views;
 
@@ -20,30 +21,14 @@ public partial class SettingsView : UserControl
     {
         if (_isCollapsed)
         {
-            TopPanel.Height = double.NaN; // Przywraca Auto wysokość
-            ToggleButton.Content = "▲";
+            BottomPart.IsVisible = true; // Przywraca Auto wysokość
+            ToggleButton.Content = "Hide Config";
         }
         else
         {
-            TopPanel.Height = 50; // Wysokość dla zwiniętej wersji
-            ToggleButton.Content = "▼";
+            BottomPart.IsVisible = false; // Wysokość dla zwiniętej wersji
+            ToggleButton.Content = "Show Config";
         }
         _isCollapsed = !_isCollapsed;
     }
-
-   
-    
-
-    public void SendMessage(object sender, RoutedEventArgs e)
-    {
-         //serialPortManager.SendMessage(Message.Text);
-    }
-}
-public struct PortParameters
-{
-    public string portName;
-    public int baudRate;
-    public int dataBits;
-    public Parity parity;
-    public StopBits stopBits;
 }

@@ -1,0 +1,151 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SzeregowaAvalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:SzeregowaAvalonia.Views"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="460"
+        x:Class="SzeregowaAvalonia.Views.MacroWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SzeregowaAvalonia"
+		MaxHeight="460"
+		MaxWidth="500"
+		MinHeight="460"
+		MinWidth="500"
+		>
+	<Window.Resources>
+		<StreamGeometry x:Key="arrow_export_rtl_regular">M17.5 4C17.2239 4 17 4.22386 17 4.5V15.5C17 15.7761 17.2239 16 17.5 16C17.7761 16 18 15.7761 18 15.5V4.5C18 4.22386 17.7761 4 17.5 4Z M15 10C15 9.72386 14.7761 9.5 14.5 9.5H3.70711L6.8536 6.35355C7.0488 6.15829 7.0488 5.84171 6.8536 5.64645C6.6583 5.45118 6.3417 5.45118 6.1464 5.64645L2.1464 9.64645C2.09389 9.69898 2.05551 9.76028 2.03125 9.82563C2.01104 9.87992 2 9.93867 2 10C2 10.0613 2.01104 10.1201 2.03125 10.1744C2.05551 10.2397 2.09389 10.301 2.1464 10.3536L6.1464 14.3536C6.3417 14.5488 6.6583 14.5488 6.8536 14.3536C7.0488 14.1583 7.0488 13.8417 6.8536 13.6465L3.7071 10.5H14.5C14.7761 10.5 15 10.2761 15 10Z</StreamGeometry>
+		<StreamGeometry x:Key="arrow_import_regular">M21.25,4.5 C21.6296958,4.5 21.943491,4.78215388 21.9931534,5.14822944 L22,5.25 L22,18.254053 C22,18.6682666 21.6642136,19.004053 21.25,19.004053 C20.8703042,19.004053 20.556509,18.7218991 20.5068466,18.3558236 L20.5,18.254053 L20.5,5.25 C20.5,4.83578644 20.8357864,4.5 21.25,4.5 Z M12.6470979,6.30372605 L12.7197247,6.21961512 C12.9860188,5.95337607 13.402685,5.92921307 13.6962739,6.14709787 L13.7803849,6.21972471 L18.7769976,11.21737 C19.0430885,11.4835159 19.0673924,11.8999028 18.8498298,12.1934928 L18.777305,12.2776129 L13.7806923,17.2810585 C13.4879993,17.5741518 13.0131257,17.5744763 12.7200324,17.2817833 C12.453584,17.0156987 12.4290932,16.5990517 12.646747,16.3052914 L12.7193077,16.2211234 L16.4301989,12.504 L2.75019891,12.504946 C2.37050315,12.504946 2.05670795,12.2227922 2.00704553,11.8567166 L2.00019891,11.754946 C2.00019891,11.3752503 2.28235279,11.0614551 2.64842835,11.0117927 L2.75019891,11.004946 L16.4431989,11.004 L12.7196151,7.28027529 C12.4533761,7.01398122 12.4292131,6.59731504 12.6470979,6.30372605 L12.7197247,6.21961512 L12.6470979,6.30372605 Z</StreamGeometry>
+	</Window.Resources>
+	<Window.Styles>
+		<Styles>
+			
+			<Style Selector="TextBox">
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="CornerRadius" Value="15"/>
+				<Setter Property="Background" Value="Black"/>
+				<Setter Property="Margin" Value="0 5 0 0"/>
+			</Style>
+			<Style Selector="Button.Save">
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="CornerRadius" Value="15"/>
+				<Setter Property="Background" Value="#38CA53"/>
+				<Setter Property="Margin" Value="0 5 0 0"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="BorderBrush" Value="#38CA53"/>
+				<Setter Property="BorderThickness" Value="2"/>
+			</Style>
+			<Style Selector="Button.Save:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Transparent"/>
+				<Setter Property="BorderBrush" Value="#38CA53"/>
+				<Setter Property="BorderThickness" Value="2"/>
+			</Style>
+			<Style Selector="Button.Files">
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="CornerRadius" Value="15"/>
+				<Setter Property="Background" Value="Transparent"/>
+				<Setter Property="BorderBrush" Value="#38CA53"/>
+				<Setter Property="BorderThickness" Value="2"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			</Style>
+			<Style Selector="Button.Files:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="#38CA53"/>
+			</Style>
+		</Styles>
+	</Window.Styles>
+	<Border Padding="5" Background="#222222" >
+		<StackPanel Orientation="Vertical" Spacing="5">
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<Button Classes="Files">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<PathIcon Data="{StaticResource arrow_import_regular}" Foreground="White"></PathIcon>
+						<TextBlock>Import</TextBlock>
+					</StackPanel>
+				</Button>
+				<Button Classes="Files">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+					<PathIcon Data="{StaticResource arrow_export_rtl_regular}" Foreground="White"></PathIcon>
+					<TextBlock>Export</TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<!-- Macro Left -->
+					<ColumnDefinition Width="*"/>
+					<!-- Title Left -->
+					<ColumnDefinition Width="Auto"/>
+					<!-- Separator -->
+					<ColumnDefinition Width="2*"/>
+					<!-- Macro Right -->
+					<ColumnDefinition Width="*"/>
+					<!-- Title Right -->
+				</Grid.ColumnDefinitions>
+
+				<!-- 10 rows -->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<!-- Lewa kolumna -->
+				<TextBox Text="{Binding MacrosList[0].Command, Mode=TwoWay}" Grid.Row="0" Grid.Column="0" Watermark="Macro 1"/>
+				<TextBox Text="{Binding MacrosList[0].Title, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Watermark="Title 1"/>
+				<TextBox Text="{Binding MacrosList[1].Command, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Watermark="Macro 2"/>
+				<TextBox Text="{Binding MacrosList[1].Title, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Watermark="Title 2"/>
+				<TextBox Text="{Binding MacrosList[2].Command, Mode=TwoWay}" Grid.Row="2" Grid.Column="0" Watermark="Macro 3"/>
+				<TextBox Text="{Binding MacrosList[2].Title, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Watermark="Title 3"/>
+				<TextBox Text="{Binding MacrosList[3].Command, Mode=TwoWay}" Grid.Row="3" Grid.Column="0" Watermark="Macro 4"/>
+				<TextBox Text="{Binding MacrosList[3].Title, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Watermark="Title 4"/>
+				<TextBox Text="{Binding MacrosList[4].Command, Mode=TwoWay}" Grid.Row="4" Grid.Column="0" Watermark="Macro 5"/>
+				<TextBox Text="{Binding MacrosList[4].Title, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Watermark="Title 5"/>
+				<TextBox Text="{Binding MacrosList[5].Command, Mode=TwoWay}" Grid.Row="5" Grid.Column="0" Watermark="Macro 6"/>
+				<TextBox Text="{Binding MacrosList[5].Title, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Watermark="Title 6"/>
+				<TextBox Text="{Binding MacrosList[6].Command, Mode=TwoWay}" Grid.Row="6" Grid.Column="0" Watermark="Macro 7"/>
+				<TextBox Text="{Binding MacrosList[6].Title, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" Watermark="Title 7"/>
+				<TextBox Text="{Binding MacrosList[7].Command, Mode=TwoWay}" Grid.Row="7" Grid.Column="0" Watermark="Macro 8"/>
+				<TextBox Text="{Binding MacrosList[7].Title, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" Watermark="Title 8"/>
+				<TextBox Text="{Binding MacrosList[8].Command, Mode=TwoWay}" Grid.Row="8" Grid.Column="0" Watermark="Macro 9"/>
+				<TextBox Text="{Binding MacrosList[8].Title, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Watermark="Title 9"/>
+				<TextBox Text="{Binding MacrosList[9].Command, Mode=TwoWay}" Grid.Row="9" Grid.Column="0" Watermark="Macro 10"/>
+				<TextBox Text="{Binding MacrosList[9].Title, Mode=TwoWay}" Grid.Row="9" Grid.Column="1" Watermark="Title 10"/>
+
+				<!-- Prawa kolumna -->
+				<TextBox Text="{Binding MacrosList[10].Command, Mode=TwoWay}" Grid.Row="0" Grid.Column="3" Watermark="Macro 11"/>
+				<TextBox Text="{Binding MacrosList[10].Title, Mode=TwoWay}" Grid.Row="0" Grid.Column="4" Watermark="Title 11"/>
+				<TextBox Text="{Binding MacrosList[11].Command, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" Watermark="Macro 12"/>
+				<TextBox Text="{Binding MacrosList[11].Title, Mode=TwoWay}" Grid.Row="1" Grid.Column="4" Watermark="Title 12"/>
+				<TextBox Text="{Binding MacrosList[12].Command, Mode=TwoWay}" Grid.Row="2" Grid.Column="3" Watermark="Macro 13"/>
+				<TextBox Text="{Binding MacrosList[12].Title, Mode=TwoWay}" Grid.Row="2" Grid.Column="4" Watermark="Title 13"/>
+				<TextBox Text="{Binding MacrosList[13].Command, Mode=TwoWay}" Grid.Row="3" Grid.Column="3" Watermark="Macro 14"/>
+				<TextBox Text="{Binding MacrosList[13].Title, Mode=TwoWay}" Grid.Row="3" Grid.Column="4" Watermark="Title 14"/>
+				<TextBox Text="{Binding MacrosList[14].Command, Mode=TwoWay}" Grid.Row="4" Grid.Column="3" Watermark="Macro 15"/>
+				<TextBox Text="{Binding MacrosList[14].Title, Mode=TwoWay}" Grid.Row="4" Grid.Column="4" Watermark="Title 15"/>
+				<TextBox Text="{Binding MacrosList[15].Command, Mode=TwoWay}" Grid.Row="5" Grid.Column="3" Watermark="Macro 16"/>
+				<TextBox Text="{Binding MacrosList[15].Title, Mode=TwoWay}" Grid.Row="5" Grid.Column="4" Watermark="Title 16"/>
+				<TextBox Text="{Binding MacrosList[16].Command, Mode=TwoWay}" Grid.Row="6" Grid.Column="3" Watermark="Macro 17"/>
+				<TextBox Text="{Binding MacrosList[16].Title, Mode=TwoWay}" Grid.Row="6" Grid.Column="4" Watermark="Title 17"/>
+				<TextBox Text="{Binding MacrosList[17].Command, Mode=TwoWay}" Grid.Row="7" Grid.Column="3" Watermark="Macro 18"/>
+				<TextBox Text="{Binding MacrosList[17].Title, Mode=TwoWay}" Grid.Row="7" Grid.Column="4" Watermark="Title 18"/>
+				<TextBox Text="{Binding MacrosList[18].Command, Mode=TwoWay}" Grid.Row="8" Grid.Column="3" Watermark="Macro 19"/>
+				<TextBox Text="{Binding MacrosList[18].Title, Mode=TwoWay}" Grid.Row="8" Grid.Column="4" Watermark="Title 19"/>
+				<TextBox Text="{Binding MacrosList[19].Command, Mode=TwoWay}" Grid.Row="9" Grid.Column="3" Watermark="Macro 20"/>
+				<TextBox Text="{Binding MacrosList[19].Title, Mode=TwoWay}" Grid.Row="9" Grid.Column="4" Watermark="Title 20"/>
+
+				<!-- Separator between columns -->
+				<Separator Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Margin="15 0 10 0" HorizontalAlignment="Center" Width="1" Height="300" Background="White" />
+			</Grid>
+			
+			<Button HorizontalAlignment="Right" Width="100" Classes="Save" Command="{Binding SaveMacrosCommand}">Save</Button>
+		</StackPanel>
+	</Border>
+</Window>

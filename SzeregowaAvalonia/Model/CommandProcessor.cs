@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using SzeregowaAvalonia.ViewModels;
 
 namespace SzeregowaAvalonia.Model
 {
     public class CommandProcessor
     {
-        public CommandProcessor()
+        public void SendText(string text, LineEnding ending)
         {
-
-        }
-        public void SendText(string text)
-        {
+            AddLineEnding(ref text, ending);
             for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] == '$')
@@ -23,8 +21,9 @@ namespace SzeregowaAvalonia.Model
                     {
                         SerialPortManager.Instance.SendMessage("$");
                     }
-                    if (i < text.Length - 2) {
-                        
+                    if (i < text.Length - 2)
+                    {
+
                         byte? hex = GetHexVariable(text.Substring(i + 1, 2));
                         if (hex == null)
                         {
@@ -36,7 +35,8 @@ namespace SzeregowaAvalonia.Model
                             i += 2;
                         }
                     }
-                } else
+                }
+                else
                 {
                     SerialPortManager.Instance.SendMessage(text[i]);
                 }
@@ -54,7 +54,8 @@ namespace SzeregowaAvalonia.Model
                 {
                     byte converted = Convert.ToByte(text, 16);
                     return converted;
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex);
                     return null;
@@ -65,5 +66,31 @@ namespace SzeregowaAvalonia.Model
                 return null;
             }
         }
+        private void AddLineEnding(ref string text, LineEnding ending)
+        {
+            switch (ending)
+            {
+                case LineEnding.CR:
+                    text += "\r";
+                    break;
+                case LineEnding.NL:
+                    text += "\n";
+                    break;
+                case LineEnding.CRNL:
+                    text += "\r\n";
+                    break;
+                case LineEnding.NLCR:
+                    text += "\n\r";
+                    break;
+            }
+        }
+    }
+    public enum LineEnding
+    {
+        CR = 1,
+        NL = 2,
+        NLCR = 3,
+        CRNL = 4,
+        None = 5
     }
 }

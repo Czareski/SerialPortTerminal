@@ -99,7 +99,7 @@ namespace SzeregowaAvalonia.Model
             if (foundedIndex > -1)
             {
                 searchedLines.Add(line);
-                line.MarkRed();
+                line.MarkGreen();
             }
         }
         private void ClearSearched()

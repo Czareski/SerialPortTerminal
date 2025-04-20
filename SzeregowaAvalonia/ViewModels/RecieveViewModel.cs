@@ -44,6 +44,8 @@ namespace SzeregowaAvalonia.ViewModels
         [ObservableProperty]
         private int _bytesRecieved;
 
+        [ObservableProperty]
+        private int _encoding;
 
 
         public RecieveViewModel()
@@ -64,7 +66,7 @@ namespace SzeregowaAvalonia.ViewModels
         {
             BytesRecieved += 1;
 
-            if (isASCIIencoded)
+            if (Encoding == 0)
             {
                 foreach (IDataOutput output in _dataOutputs)
                 {

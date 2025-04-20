@@ -5,144 +5,148 @@
              xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SzeregowaAvalonia.Views.SettingsView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:SettingsViewModel">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
   </Design.DataContext>
+	<Border Name="TopPanel">
+				<StackPanel Classes="TopPanel" Orientation="Vertical" HorizontalAlignment="Stretch">
+					<!-- Górna część zawsze widoczna -->
+					<Border Background="#000000" Padding="10">
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
 
+							<!-- Zielone kółko po lewej -->
+							<Ellipse ToolTip.Tip="Status połączenia" Width="32" Height="32" Fill="{Binding ConnectionStatusColor}" DockPanel.Dock="Left" Margin="0,0,10,0"/>
 
-	<Grid RowDefinitions="Auto, *">
-        
-        <!-- Panel górny -->
-		<Border Name="TopPanel" Padding="10" Grid.Row="0">
-			<StackPanel Classes="TopPanel" Orientation="Vertical" HorizontalAlignment="Center">
-				<!-- Górna część zawsze widoczna -->
-				<Grid ColumnDefinitions="*,*,*,*,*,*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-					<StackPanel Grid.Column="0" Orientation="Horizontal">
-						<Ellipse Fill="{Binding ConnectionStatusColor}" Height="20" Width="20"/>
-						<Button Content="{Binding ConnectButtonText}"  Command="{Binding ConnectCommand}" Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-					</StackPanel>
+							<!-- Przycisk Disconnect -->
+							<Button Classes="TopPanelButton"
+									Content="{Binding ConnectButtonText}"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Margin="0,0,20,0"
+									DockPanel.Dock="Left"
+									Command="{Binding ToggleConnectionState}"
+									ToolTip.Tip="Połącz/Rozłącz z portem szeregowym"
+									/>
 
-					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Text="{Binding PortNameInfo}"/>
-					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Text="{Binding BaudRateInfo}"/>
-					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Text="{Binding DataBitsInfo}"/>
-					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="4" Text="{Binding ParityInfo}"/>
-					<TextBlock Classes="TopPanelElement" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="5" Text="{Binding StopBitsInfo}"/>
-					<Button Classes="TopPanelElement" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="6" x:Name="ToggleButton" Content="▲" Click="TogglePanel"/>
-				</Grid>
-
-				<!-- Ukrywana dolna część -->
-				<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0 20 0 0">
-					<!-- KOLUMNA 1: COM PORT -->
-					<StackPanel Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 20 0">
-						<TextBlock Classes="Param_name">Select COM Port</TextBlock>
-						<Border Classes="Params_block">
-							<StackPanel>
-								<ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding SelectedPort}" Width="120"/>
-								<Button Command="{Binding ScanPortsCommand}" Width="120" Margin="0 10 0 0">Scan</Button>
+							<!-- Informacje o połączeniu -->
+							<StackPanel Orientation="Horizontal"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Spacing="20"
+										ToolTip.Tip="Obecne parametry połączenia"
+										>
+								<TextBlock Classes="Label" Text="{Binding PortNameInfo}" Foreground="White"/>
+								<TextBlock Classes="Label" Text="{Binding BaudRateInfo}" Foreground="White"/>
+								<TextBlock Classes="Label" Text="{Binding DataBitsInfo}" Foreground="White"/>
+								<TextBlock Classes="Label" Text="{Binding StopBitsInfo}" Foreground="White"/>
+								<TextBlock Classes="Label" Text="{Binding ParityInfo}" Foreground="White"/>
 							</StackPanel>
-						</Border>
-					</StackPanel>
 
-					<!-- KOLUMNA 2: BAUD RATE -->
-					<StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 20 0">
-						<TextBlock Classes="Param_name">Select Baud Rate</TextBlock>
-						<Border Classes="Params_block">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-
-								<!-- Baud Rate Buttons -->
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="600" Grid.Row="0" Grid.Column="0"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="1200" Grid.Row="0" Grid.Column="1"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="2400" Grid.Row="0" Grid.Column="2"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="4800" Grid.Row="0" Grid.Column="3"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="9600" Grid.Row="1" Grid.Column="0"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="14400" Grid.Row="1" Grid.Column="1"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="19200" Grid.Row="1" Grid.Column="2"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="28800" Grid.Row="1" Grid.Column="3"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="38400" Grid.Row="2" Grid.Column="0"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="56000" Grid.Row="2" Grid.Column="1"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="57600" Grid.Row="2" Grid.Column="2"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="115200" Grid.Row="2" Grid.Column="3"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="128000" Grid.Row="3" Grid.Column="0"/>
-								<RadioButton Command="{Binding BaudRateCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="256000" Grid.Row="3" Grid.Column="1"/>
-								<RadioButton Content="custom" Grid.Row="3" Grid.Column="2"/>
-								<TextBox Grid.Row="3" Grid.Column="3" Width="100"/>
-							</Grid>
-						</Border>
-					</StackPanel>
-
-					<!-- KOLUMNA 3: DATA BITS -->
-					<StackPanel Grid.Column="2" HorizontalAlignment="Left" Margin="0 0 20 0">
-						<TextBlock Classes="Param_name">Select Data Bits</TextBlock>
-						<StackPanel>
-							<RadioButton Command="{Binding DataBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="5"/>
-							<RadioButton Command="{Binding DataBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="6"/>
-							<RadioButton Command="{Binding DataBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="7"/>
-							<RadioButton Command="{Binding DataBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="8"/>
-
+							<!-- Przycisk Show Configuration po prawej -->
+							<Button
+									Classes="TopPanelButton"
+									Content="Hide Config"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Center"
+									Margin="20,0,0,0"
+									DockPanel.Dock="Right"
+									Click="TogglePanel"
+									x:Name="ToggleButton"
+									ToolTip.Tip="Rozwiń/zwiń panel konfiguarcyjny"
+									/>
 						</StackPanel>
-					</StackPanel>
+					</Border>
 
-					<!-- KOLUMNA 4: PARITY -->
-					<StackPanel Grid.Column="3" HorizontalAlignment="Left" Margin="0 0 20 0">
-						<TextBlock Classes="Param_name">Select Parity</TextBlock>
+					<!-- Ukrywana dolna część -->
+					<Border x:Name="BottomPart" Background="Black" Padding="30 0 30 30">
+
 						<StackPanel>
-							<RadioButton Command="{Binding ParityCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="None"/>
-							<RadioButton Command="{Binding ParityCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="Odd"/>
-							<RadioButton Command="{Binding ParityCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="Even"/>
-							<RadioButton Command="{Binding ParityCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="Mark"/>
-							<RadioButton Command="{Binding ParityCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Content="Space"/>
+							<Separator Width="2000" Height="1" Background="Gray" Margin="0,0,0,20"/>
+							<StackPanel Orientation="Horizontal" Spacing="30">
+
+
+								<StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="5">
+									<TextBlock Margin="0 0 0 10" HorizontalAlignment="Center" Height="20" Classes="Label">Serial Port:</TextBlock>
+									<ComboBox HorizontalAlignment="Center" Height="20" Width="80" ItemsSource="{Binding ComPorts}" SelectedItem="{Binding SelectedPort}"/>
+									<Button Command="{Binding ScanPorts}" Classes="TopPanelButton"
+										Width="80"
+										Height="30"
+										Content="Scan"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										ToolTip.Tip="Znajdź inne dostępne porty"
+									/>
+								</StackPanel>
+								<Grid VerticalAlignment="Top"  ToolTip.Tip="Wybierz prędkość (bps)">
+									<Grid.RowDefinitions>
+										<RowDefinition />
+										<RowDefinition />
+										<RowDefinition />
+										<RowDefinition />
+										<RowDefinition />
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition />
+										<ColumnDefinition />
+										<ColumnDefinition />
+										<ColumnDefinition />
+										<ColumnDefinition />
+									</Grid.ColumnDefinitions>
+
+									<TextBlock Margin="0 0 0 10" Classes="Label" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">Baud Rate:</TextBlock>
+									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="600" Grid.Row="1" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="600" />
+									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="1200" Grid.Row="1" Grid.Column="1" Command="{Binding ChangeBaudRateCommand}" CommandParameter="1200" />
+									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="4800" Grid.Row="1" Grid.Column="3" Command="{Binding ChangeBaudRateCommand}" CommandParameter="4800" />
+									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="2400" Grid.Row="1" Grid.Column="2" Command="{Binding ChangeBaudRateCommand}" CommandParameter="2400" />
+									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="9600" Grid.Row="1" Grid.Column="4" Command="{Binding ChangeBaudRateCommand}" CommandParameter="9600" />
+
+									<RadioButton Margin="0 0 5 0" Content="19200" Grid.Row="2" Grid.Column="1" Command="{Binding ChangeBaudRateCommand}" CommandParameter="19200" />
+									<RadioButton Margin="0 0 5 0" Content="14400" Grid.Row="2" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="14400" />
+									<RadioButton Margin="0 0 5 0" Content="28800" Grid.Row="2" Grid.Column="2" Command="{Binding ChangeBaudRateCommand}" CommandParameter="28800" />
+									<RadioButton Margin="0 0 5 0" Content="38400" Grid.Row="2" Grid.Column="3" Command="{Binding ChangeBaudRateCommand}" CommandParameter="38400" />
+									<RadioButton Margin="0 0 5 0" Content="56000" Grid.Row="2" Grid.Column="4" Command="{Binding ChangeBaudRateCommand}" CommandParameter="56000" />
+
+									<RadioButton Margin="0 0 5 0" Content="57600" Grid.Row="3" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="57600" />
+									<RadioButton Margin="0 0 5 0" Content="115200" Grid.Row="3" Grid.Column="1" Command="{Binding ChangeBaudRateCommand}" CommandParameter="115200" />
+									<RadioButton Margin="0 0 5 0" Content="128000" Grid.Row="3" Grid.Column="2" Command="{Binding ChangeBaudRateCommand}" CommandParameter="128000" />
+									<RadioButton Margin="0 0 5 0" Content="256000" Grid.Row="3" Grid.Column="3" Command="{Binding ChangeBaudRateCommand}" CommandParameter="256000" />
+
+									<RadioButton Content="custom" Grid.Row="4" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="custom" />
+									<TextBox Text="{Binding CustomBaudRate}" IsEnabled="{Binding IsCustomInputEnabled}" Background="#222222" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="10 0 0 0"></TextBox>
+								</Grid>
+								<StackPanel HorizontalAlignment="Left" Margin="0 0 20 0" ToolTip.Tip="Wybierz liczbę bitów danych">
+									<TextBlock Margin="0 0 0 10" Classes="Label">Data Bits:</TextBlock>
+									<StackPanel>
+										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="5" Content="5"/>
+										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="6" Content="6"/>
+										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="7" Content="7"/>
+										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="8" Content="8"/>
+
+									</StackPanel>
+								</StackPanel>
+								<StackPanel Grid.Column="3" HorizontalAlignment="Left"  ToolTip.Tip="Wybierz parzystość">
+									<TextBlock Classes="Lablel" Margin="0 0 0 10">Select Parity</TextBlock>
+									<StackPanel>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="None" Content="None"/>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Odd" Content="Odd"/>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Even" Content="Even"/>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Mark" Content="Mark"/>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Space" Content="Space"/>
+									</StackPanel>
+								</StackPanel>
+								<StackPanel Grid.Column="4" HorizontalAlignment="Left" ToolTip.Tip="Wybierz liczbę bitów stopu">
+									<TextBlock Classes="Lablel" Margin="0 0 0 10">Select Stop Bits</TextBlock>
+									<StackPanel>
+										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="1" GroupName="StopBits" Content="1"/>
+										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="1.5" GroupName="StopBits" Content="1.5"/>
+										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="2" GroupName="StopBits" Content="2"/>
+									</StackPanel>
+								</StackPanel>
+							</StackPanel>
 						</StackPanel>
-					</StackPanel>
-
-					<!-- KOLUMNA 5: STOP BITS -->
-					<StackPanel Grid.Column="4" HorizontalAlignment="Left">
-						<TextBlock Classes="Param_name">Select Stop Bits</TextBlock>
-						<StackPanel>
-							<RadioButton Command="{Binding StopBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" GroupName="StopBits" Content="1"/>
-							<RadioButton Command="{Binding StopBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" GroupName="StopBits" Content="1.5"/>
-							<RadioButton Command="{Binding StopBitsCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" GroupName="StopBits" Content="2"/>
-						</StackPanel>
-					</StackPanel>
-				</Grid>
-			</StackPanel>
-		</Border>
-    </Grid>
-	
-	
-	
-	
-	
-	
-	
-	<!--
-	
-
-	-->
-
-
-	<!--
-		
-		-->
-		<!--
-		<StackPanel Grid.Row="1" Grid.Column="1">
-			<TextBox />
-			<Button Click="SendMessage">Send</Button>
-		</StackPanel>
-		-->
-
+					</Border>
+				</StackPanel>
+			</Border>
 </UserControl>

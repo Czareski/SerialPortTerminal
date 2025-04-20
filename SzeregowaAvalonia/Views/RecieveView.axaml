@@ -10,31 +10,46 @@
 		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 	</Design.DataContext>
-	<Border Grid.Row="1">
-		<StackPanel Margin="10" Spacing="10">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0" HorizontalAlignment="Stretch" Padding="25 10 25 10">
+			<Grid ColumnDefinitions="Auto,*">
+				<!-- Left-aligned elements -->
+				<StackPanel Orientation="Horizontal" Spacing="5" Grid.Column="0" VerticalAlignment="Center">
+					<TextBlock ToolTip.Tip="Liczba odebranych bajtów danych" TextAlignment="Center" Background="Black" Foreground="White" Padding="10" Width="60" Text="{Binding BytesRecieved}"/>
+					<StackPanel Orientation="Horizontal" Margin="0 3 0 0" Spacing="5">
+						<ComboBox ToolTip.Tip="Wybierz sposób wyświetlania danych" Width="90" Background="Black" SelectedIndex="{Binding Encoding}">
+							<ComboBoxItem>ASCII</ComboBoxItem>
+							<ComboBoxItem>HEX</ComboBoxItem>
+						</ComboBox>
+					</StackPanel>
+					<Button ToolTip.Tip="Wyczyść terminal" Padding="7" Classes="RecieveViewButton" Background="Black" Command="{Binding Clear}">Clear</Button>
+					<Button ToolTip.Tip="Zapisz dane w pliku" Padding="7" Classes="RecieveViewButton" Background="Black" Command="{Binding HandleLogButton}" Content="{Binding LoggingButtonContent}"/>
 
-			<!-- Pasek narzędzi: Szukaj + Wyczyść -->
-			<StackPanel Orientation="Horizontal" Spacing="10">
-				<TextBlock Text="{Binding BytesRecieved}"/>
-				<TextBox Width="200" Watermark="Szukaj..." Text="{Binding InputText, Mode=TwoWay}" TextChanged="SearchFieldUpdated"/>
-				<Button Classes="RecievePanelButton" Content="Next" Command="{Binding SearchNext}" />
-				<Button Classes="RecievePanelButton" Content="Clear" Command="{Binding Clear}" />
-				<Button Classes="RecievePanelButton" Content="{Binding LoggingButtonContent}" Command="{Binding HandleLogButton}" />
-				<RadioButton Command="{Binding ChangeEncoding}" CommandParameter="{x:True}" Content="ASCII"/>
-				<RadioButton Command="{Binding ChangeEncoding}" CommandParameter="{x:False}" Content="HEX"/>
-			</StackPanel>
+					<Button ToolTip.Tip="Wybierz plik" Padding="7" Classes="RecieveViewButton" Background="Black">
+						<PathIcon Foreground="White" Data="{StaticResource folder_regular}"/>
+					</Button>
+				</StackPanel>
 
-			<!-- Pole odbioru -->
-			<ScrollViewer Offset="{Binding Terminal.Scroll.Offset}" Classes="Output" VerticalScrollBarVisibility="Auto" Height="400" LayoutUpdated="OnLayoutUpdated">
-				<ItemsControl ItemsSource="{Binding Terminal.Lines}">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<SelectableTextBlock Background="{Binding Background}" Foreground="White" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="15"/>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
-			</ScrollViewer>
-
-		</StackPanel>
-	</Border>
+				<!-- Right-aligned search area -->
+				<StackPanel Orientation="Horizontal" Grid.Column="1"
+							HorizontalAlignment="Right" Spacing="5" VerticalAlignment="Center">
+					<TextBox ToolTip.Tip="Wyszukaj fraze w terminalu" Background="Black" Watermark="Search..." Width="200" Text="{Binding InputText, Mode=TwoWay}" TextChanged="SearchFieldUpdated"/>
+					<Button ToolTip.Tip="Znajdź kolejne wystąpienie wyszukiwanej frazy" Classes="RecieveViewButton" Background="Black" Command="{Binding SearchNext}">Next</Button>
+				</StackPanel>
+			</Grid>
+		</Border>
+		<ScrollViewer VerticalAlignment="Stretch" Grid.Row="1" Offset="{Binding Terminal.Scroll.Offset}" Classes="Output" VerticalScrollBarVisibility="Auto" Margin="25 0 25 25" Background="Black" LayoutUpdated="OnLayoutUpdated">
+			<ItemsControl ItemsSource="{Binding Terminal.Lines}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<SelectableTextBlock Background="{Binding Background}" Foreground="White" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="15"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+	</Grid>
 </UserControl>

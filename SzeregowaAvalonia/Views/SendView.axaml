@@ -3,155 +3,119 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
              x:Class="SzeregowaAvalonia.Views.SendView"
              x:DataType="vm:SendViewModel">
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 	</Design.DataContext>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-		
-		<StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-			<TextBox Height="10" Width="400" Text="{Binding CommandText, Mode=TwoWay}"></TextBox>
-			<ComboBox Margin="5 0 0 0" Height="10" SelectedIndex="{Binding SelectedLineEnding}">
-				<ComboBoxItem>None</ComboBoxItem>
-				<ComboBoxItem>CR</ComboBoxItem>
-				<ComboBoxItem>NL</ComboBoxItem>
-				<ComboBoxItem>CR+NL</ComboBoxItem>
-				<ComboBoxItem>NL+CR</ComboBoxItem>
-			</ComboBox>
-			<Button Classes="RecievePanelButton" IsDefault="True" Command="{Binding SendCommand}" HorizontalContentAlignment="Center" Margin="5 0 0 0">Send</Button>
-		</StackPanel>
+		<StackPanel>
+		<Grid ColumnDefinitions="3*,Auto,Auto,Auto,Auto,*,Auto" RowDefinitions="Auto, Auto" Margin="25 0 25 0">
+			<!-- TextBox rozciąga się w kolumnie * -->
+			<TextBox ToolTip.Tip="Nadaj polecenie" Grid.Column="0" Background="Black" Watermark="Transmit command" Margin="0,0,5,0" Text="{Binding CommandText, Mode=TwoWay}"/>
 
-		<Grid Grid.Row="1">
+			<Button ToolTip.Tip="Wyślij polecenie" IsDefault="True" Command="{Binding SendCommand}" Grid.Column="1" Classes="RecieveViewButton" Margin="0,0,5,0">Send</Button>
+			<CheckBox ToolTip.Tip="Dodaj znak nowej linii na końcu linii" IsChecked="{Binding IsNLChecked}" Grid.Column="3" VerticalAlignment="Center" Margin="0,0,5,0">+NL</CheckBox>
+			<CheckBox ToolTip.Tip="Dodaj znak powrotu karetki na końcu linii" IsChecked="{Binding IsCRChecked}" Grid.Column="4" VerticalAlignment="Center" Margin="0,0,5,0">+CR</CheckBox>
+			<StackPanel Grid.Column="5" Grid.ColumnSpan="2" Grid.Row="0" Orientation="Horizontal" Spacing="5">
+				<RadioButton IsVisible="{Binding AreOrderButtonsVisible}" GroupName="Options"
+							 Content="NL+CR"
+							 Command="{Binding SetOrderCommand}"
+							 IsChecked="{Binding IsNLCRChecked}"
+							 CommandParameter="3"
+							 ToolTip.Tip="Wybierz kolejność znaków: Nowa linia + powrót karetki"
+							 />
+				<RadioButton IsVisible="{Binding AreOrderButtonsVisible}" GroupName="Options"
+							 Content="CR+NL"
+							 Command="{Binding SetOrderCommand}"
+							 CommandParameter="4"
+							 ToolTip.Tip="Wybierz kolejność znaków: Powrót karetki + nowa linia"
+							 />
+			</StackPanel>
+		</Grid>
+
+		<Grid Margin="25 10 25 0">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="50"/>
-				<RowDefinition Height="50"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<!-- Pierwszy rząd -->
-			<Button Grid.Row="0" Grid.Column="0">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="help"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="0" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[0].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="1">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="Tz-80"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="1" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[1].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="2">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="10/30"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="2" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[2].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="3">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="25/60"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="3" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[3].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="4">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T-1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="4" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[4].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="5">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T-0.1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="5" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[5].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="6">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="50c_0H"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="6" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[6].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="7">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T3-2"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="7" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[7].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="8">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T3+0.1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="8" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[8].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="0" Grid.Column="9">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="+0.1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="9" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[9].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
 
-			<!-- Drugi rząd -->
-			<Button Grid.Row="1" Grid.Column="0">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="+1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="0" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[10].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="1">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="+10"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="1" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[11].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="2">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="reset"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="2" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[12].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="3">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="update"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="3" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[13].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="4">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="cfg"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="4" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[14].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="5">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="H+1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="5" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[15].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="6">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T+2"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="6" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[16].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="7">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T 0.1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="7" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[17].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="8">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T 0.01"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="8" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[18].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Grid.Row="1" Grid.Column="9">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Text="T3-0.1"/>
-				</Viewbox>
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="9" Command="{Binding UseMacroCommand}">
+				<TextBlock Text="{Binding Macros[19].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
 		</Grid>
-		<StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<Button HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding BuyMusicCommand}">Edit Macros</Button>
+		<Button Command="{Binding OpenMacroWindowCommand}">Edit Macros</Button>
 		</StackPanel>
-	</Grid>
+
 </UserControl>

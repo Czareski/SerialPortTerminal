@@ -1,7 +1,8 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
+using DynamicData.Kernel;
+using SzeregowaAvalonia.Model;
 using SzeregowaAvalonia.ViewModels;
 using SzeregowaAvalonia.Views;
 
@@ -18,19 +19,11 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainViewModel()
-            };
-        }
-        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-        {
-            singleViewPlatform.MainView = new SettingsView
-            {
-                DataContext = new MainViewModel()
-            };
-        }
+            ErrorService errorService = new ErrorService();
+            desktop.MainWindow = new MainWindow(new MainViewModel(errorService));
 
+
+        }
         base.OnFrameworkInitializationCompleted();
     }
-}
+}   

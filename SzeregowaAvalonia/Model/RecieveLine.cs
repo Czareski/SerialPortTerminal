@@ -10,7 +10,7 @@ namespace SzeregowaAvalonia.Model
 {
     public class RecieveLine : INotifyPropertyChanged
     {
-        private string _text;
+        private string _text = "";
         public string Text
         {
             get => _text;
@@ -26,7 +26,7 @@ namespace SzeregowaAvalonia.Model
 
         private IBrush _originalBackground;
 
-        private IBrush _background;
+        private IBrush _background = Brushes.Black;
         public IBrush Background
         {
             get => _background;
@@ -50,9 +50,9 @@ namespace SzeregowaAvalonia.Model
         {
             Background = _originalBackground;
         }
-        public void MarkRed()
+        public void MarkGreen()
         {
-            Background = Brushes.Red;
+            Background = Brush.Parse("#38CA53");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
