@@ -16,7 +16,7 @@ namespace SzeregowaAvalonia.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
-    private ErrorService _errorService;
+    private ErrorHandler _errorService;
     private bool isConnected = false;
     [ObservableProperty]
     private string _connectButtonText = "Connect";
@@ -40,17 +40,17 @@ public partial class SettingsViewModel : ViewModelBase
     private string _selectedPort;
     public ObservableCollection<string> ComPorts { get; } = new ObservableCollection<string>();
 
-    public SettingsViewModel(ErrorService errorService)
+    public SettingsViewModel(ErrorHandler errorService)
     {
         System.Diagnostics.Debug.WriteLine("SettingsViewModel constructor called");
         _errorService = errorService;
         
-        if (SerialPortManager.Instance == null)
+        if (SerialPortHandler.Instance == null)
         {
-            new SerialPortManager();
+            new SerialPortHandler();
         }
         
-        foreach (string com in SerialPortManager.Instance.GetPortNames())
+        foreach (string com in SerialPortHandler.Instance.GetPortNames())
         {
             ComPorts.Add(com);
         }
@@ -68,17 +68,17 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     public void ChangeStopBits(string value)
     {
-        SerialPortManager.Instance.SetStopBits(value);
+        SerialPortHandler.Instance.SetStopBits(value);
     }
     [RelayCommand]
     public void ChangeParity(string value)
     {
-        SerialPortManager.Instance.SetParity(value);
+        SerialPortHandler.Instance.SetParity(value);
     }
     [RelayCommand]
     public void ChangeDataBits(string value)
     {
-        SerialPortManager.Instance.SetDataBits(value);
+        SerialPortHandler.Instance.SetDataBits(value);
     }
     [RelayCommand]
     public void ChangeBaudRate(string value)
@@ -89,7 +89,7 @@ public partial class SettingsViewModel : ViewModelBase
         }
 
         IsCustomInputEnabled = false;
-        bool result = SerialPortManager.Instance.SetBaudRate(value);
+        bool result = SerialPortHandler.Instance.SetBaudRate(value);
         if (result && isConnected)
         {
             BaudRateInfo = "Baud rate: " + value;
@@ -101,27 +101,27 @@ public partial class SettingsViewModel : ViewModelBase
     {
         if (isConnected)
         {
-            SerialPortManager.Instance.ClosePort();
+            SerialPortHandler.Instance.ClosePort();
             isConnected = false;
             SetConnectionDisplay();
             return;
         }
 
-        SerialPortManager.Instance.SetPortName(SelectedPort);
+        SerialPortHandler.Instance.SetPortName(SelectedPort);
         if (IsCustomInputEnabled)
         {
-            SerialPortManager.Instance.SetBaudRate(CustomBaudRate);
+            SerialPortHandler.Instance.SetBaudRate(CustomBaudRate);
         }
         
-        bool isSerialPortOpened = SerialPortManager.Instance.OpenPort();
+        bool isSerialPortOpened = SerialPortHandler.Instance.OpenPort();
         
         if (isSerialPortOpened)
         {
-            PortNameInfo = "COM: " + SerialPortManager.Instance.GetPortName();
-            DataBitsInfo = "Data bits: " + SerialPortManager.Instance.GetDataBits();
-            BaudRateInfo = "Baud rate: " + SerialPortManager.Instance.GetBaudRate();
-            ParityInfo = "Parity: " + SerialPortManager.Instance.GetParity();
-            StopBitsInfo = "Stop bits: " + SerialPortManager.Instance.GetStopBits();
+            PortNameInfo = "COM: " + SerialPortHandler.Instance.GetPortName();
+            DataBitsInfo = "Data bits: " + SerialPortHandler.Instance.GetDataBits();
+            BaudRateInfo = "Baud rate: " + SerialPortHandler.Instance.GetBaudRate();
+            ParityInfo = "Parity: " + SerialPortHandler.Instance.GetParity();
+            StopBitsInfo = "Stop bits: " + SerialPortHandler.Instance.GetStopBits();
 
             isConnected = true;
             SetConnectionDisplay();
@@ -133,7 +133,7 @@ public partial class SettingsViewModel : ViewModelBase
     {
         System.Diagnostics.Debug.WriteLine("ScanPorts called");
         ComPorts.Clear();
-        foreach (string com in SerialPortManager.Instance.GetPortNames())
+        foreach (string com in SerialPortHandler.Instance.GetPortNames())
         {
             ComPorts.Add(com);
         }

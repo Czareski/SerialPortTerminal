@@ -15,12 +15,12 @@ namespace SzeregowaAvalonia.ViewModels
         public RecieveViewModel RecieveViewModel { get; }
         public SendViewModel SendViewModel { get; }
         public ErrorViewModel ErrorViewModel { get; }
-        public MainViewModel(ErrorService errorService)
+        public MainViewModel(ErrorHandler errorHandler, SerialPortHandler serialPortHandler)
         {
-            SettingsVM = new SettingsViewModel(errorService);
-            RecieveViewModel = new RecieveViewModel();
-            SendViewModel = new SendViewModel();
-            ErrorViewModel = new ErrorViewModel(errorService);
+            SettingsVM = new SettingsViewModel(errorHandler, serialPortHandler);
+            RecieveViewModel = new RecieveViewModel(errorHandler, serialPortHandler);
+            SendViewModel = new SendViewModel(errorHandler, serialPortHandler);
+            ErrorViewModel = new ErrorViewModel(errorHandler);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace SzeregowaAvalonia.Model
                 {
                     if (i > 0 && text[i - 1] == '$')
                     {
-                        SerialPortManager.Instance.SendMessage("$");
+                        SerialPortHandler.Instance.SendMessage("$");
                     }
                     if (i < text.Length - 2)
                     {
@@ -31,14 +31,14 @@ namespace SzeregowaAvalonia.Model
                         }
                         else
                         {
-                            SerialPortManager.Instance.SendMessage((byte)hex);
+                            SerialPortHandler.Instance.SendMessage((byte)hex);
                             i += 2;
                         }
                     }
                 }
                 else
                 {
-                    SerialPortManager.Instance.SendMessage(text[i]);
+                    SerialPortHandler.Instance.SendMessage(text[i]);
                 }
             }
         }

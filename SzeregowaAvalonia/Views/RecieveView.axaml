@@ -46,7 +46,7 @@
 			<ItemsControl ItemsSource="{Binding Terminal.Lines}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<SelectableTextBlock Background="{Binding Background}" Foreground="White" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="15"/>
+						<SelectableTextBlock Background="{Binding Background}" Foreground="White" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="18"/>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

@@ -17,7 +17,7 @@ namespace SzeregowaAvalonia.ViewModels
         private string _errorMessage = "";
         [ObservableProperty]
         public bool _isShown = false;
-        public ErrorViewModel(ErrorService errorService) {
+        public ErrorViewModel(ErrorHandler errorService) {
             Debug.WriteLine("Error View Model");
             errorService.ErrorReceived += OnErrorReceived;
         }

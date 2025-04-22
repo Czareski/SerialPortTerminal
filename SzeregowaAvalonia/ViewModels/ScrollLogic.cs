@@ -10,7 +10,7 @@ namespace SzeregowaAvalonia.ViewModels
 {
     public partial class ScrollLogic : ObservableObject
     {
-        private const int LINE_HEIGHT = 15;
+        private const int LINE_HEIGHT = 18;
 
         public bool autoScroll { get; set; } = true;
 

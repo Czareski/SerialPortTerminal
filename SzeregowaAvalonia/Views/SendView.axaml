@@ -53,65 +53,65 @@
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="0" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="0" Command="{Binding UseMacroCommand}" CommandParameter="0">
 				<TextBlock Text="{Binding Macros[0].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="1" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="1" Command="{Binding UseMacroCommand}" CommandParameter="1">
 				<TextBlock Text="{Binding Macros[1].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="2" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="2" Command="{Binding UseMacroCommand}" CommandParameter="2">
 				<TextBlock Text="{Binding Macros[2].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="3" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="3" Command="{Binding UseMacroCommand}" CommandParameter="3">
 				<TextBlock Text="{Binding Macros[3].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="4" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="4" Command="{Binding UseMacroCommand}" CommandParameter="4">
 				<TextBlock Text="{Binding Macros[4].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="5" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="5" Command="{Binding UseMacroCommand}" CommandParameter="5">
 				<TextBlock Text="{Binding Macros[5].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="6" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="6" Command="{Binding UseMacroCommand}" CommandParameter="6">
 				<TextBlock Text="{Binding Macros[6].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="7" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="7" Command="{Binding UseMacroCommand}" CommandParameter="7">
 				<TextBlock Text="{Binding Macros[7].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="8" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="8" Command="{Binding UseMacroCommand}" CommandParameter="8">
 				<TextBlock Text="{Binding Macros[8].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="9" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="0" Grid.Column="9" Command="{Binding UseMacroCommand}" CommandParameter="9">
 				<TextBlock Text="{Binding Macros[9].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
 
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="0" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="0" Command="{Binding UseMacroCommand}" CommandParameter="10">
 				<TextBlock Text="{Binding Macros[10].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="1" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="1" Command="{Binding UseMacroCommand}" CommandParameter="11">
 				<TextBlock Text="{Binding Macros[11].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="2" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="2" Command="{Binding UseMacroCommand}" CommandParameter="12">
 				<TextBlock Text="{Binding Macros[12].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="3" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="3" Command="{Binding UseMacroCommand}" CommandParameter="13">
 				<TextBlock Text="{Binding Macros[13].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="4" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="4" Command="{Binding UseMacroCommand}" CommandParameter="14">
 				<TextBlock Text="{Binding Macros[14].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="5" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="5" Command="{Binding UseMacroCommand}" CommandParameter="15">
 				<TextBlock Text="{Binding Macros[15].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="6" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="6" Command="{Binding UseMacroCommand}" CommandParameter="16">
 				<TextBlock Text="{Binding Macros[16].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="7" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="7" Command="{Binding UseMacroCommand}" CommandParameter="17">
 				<TextBlock Text="{Binding Macros[17].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="8" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="8" Command="{Binding UseMacroCommand}" CommandParameter="18">
 				<TextBlock Text="{Binding Macros[18].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
-			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="9" Command="{Binding UseMacroCommand}">
+			<Button Width="80" Height="50" Grid.Row="1" Grid.Column="9" Command="{Binding UseMacroCommand}" CommandParameter="19">
 				<TextBlock Text="{Binding Macros[19].Title}" TextWrapping="Wrap" TextAlignment="Center"/>
 			</Button>
 		</Grid>

@@ -19,12 +19,13 @@ namespace SzeregowaAvalonia.Model
         private string _searchedPhrase = "";
         private List<RecieveLine> searchedLines = [];
         private int currentSearchIndex = 0;
+        int allLines = 0;
         public ScrollLogic Scroll { get; } = new();
         public ObservableCollection<RecieveLine> Lines { get; } = [new RecieveLine(Brushes.Black)];
 
         public void UpdateLineWidth(double value)
         {
-            _lineWidth = Convert.ToInt32(value / CHARACTER_PER_WIDTH);
+            _lineWidth = Convert.ToInt32(value / CHARACTER_PER_WIDTH) - 1;
         }
         public void RecieveData(byte data) {
             if (data == 0x0D)
@@ -46,11 +47,16 @@ namespace SzeregowaAvalonia.Model
         }
         public void RecieveHexData(string data)
         {
+            if (Lines[Lines.Count - 1].Text.Length >= _lineWidth)
+            {
+                AddNewLine();
+            }
             Lines[Lines.Count - 1].Text += data;
         }
 
         public void AddNewLine()
         {
+            allLines += 1;
             _lineAlternateIndex += 1;
             if (Lines.Count == MAX_LINES)
             {
@@ -62,6 +68,7 @@ namespace SzeregowaAvalonia.Model
             RecieveLine newLine = new RecieveLine(background);
             
             Lines.Add(newLine);
+            newLine.Text = allLines + "> ";
             SearchInLine(newLine);
 
             if (Scroll.autoScroll)

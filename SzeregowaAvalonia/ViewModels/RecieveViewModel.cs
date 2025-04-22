@@ -50,13 +50,13 @@ namespace SzeregowaAvalonia.ViewModels
 
         public RecieveViewModel()
         {
-            if (SerialPortManager.Instance == null)
+            if (SerialPortHandler.Instance == null)
             {
-                new SerialPortManager();
+                new SerialPortHandler();
             }
             _dataOutputs.Add(Terminal);
             
-            SerialPortManager.Instance.dataRecievedEvent += RecieveData;
+            SerialPortHandler.Instance.dataRecievedEvent += RecieveData;
         }
 
         
@@ -87,7 +87,6 @@ namespace SzeregowaAvalonia.ViewModels
         [RelayCommand]
         public void Search()
         {
-
             Terminal.Search(InputText);
         }
 

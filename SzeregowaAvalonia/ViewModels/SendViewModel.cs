@@ -16,7 +16,7 @@ namespace SzeregowaAvalonia.ViewModels
         private string _commandText = string.Empty;
         private CommandProcessor _commandProcessor = new CommandProcessor();
         [ObservableProperty]
-        public ObservableCollection<Macro> _macros;
+        public ObservableCollection<Macro> _macros = new ObservableCollection<Macro>();
         private MacrosService _macrosService = new MacrosService();
         public string CommandText
         {
@@ -43,7 +43,10 @@ namespace SzeregowaAvalonia.ViewModels
         public SendViewModel()
         {
             _macrosService.OnMacrosUpdated += UpdateMacros;
-            Macros = _macrosService.CurrentMacrosList;
+            for (int i = 0; i < 20; i++)
+            {
+                Macros.Add(new Macro(_macrosService.CurrentMacrosList[i].Title, _macrosService.CurrentMacrosList[i].Command));
+            }
         }
 
 
@@ -124,8 +127,15 @@ namespace SzeregowaAvalonia.ViewModels
         {
             for (int i = 0; i < 20; i++)
             {
-                Macros[i] = _macrosService.CurrentMacrosList[i];
+                Macros[i].Title = _macrosService.CurrentMacrosList[i].Title;
+                Macros[i].Command = _macrosService.CurrentMacrosList[i].Command;
             }
+        }
+        [RelayCommand]
+        public void UseMacro(string param)
+        {
+            int index = Convert.ToInt32(param);
+            CommandText = Macros[index].Command;
         }
     }
            

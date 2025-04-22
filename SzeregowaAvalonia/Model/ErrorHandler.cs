@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SzeregowaAvalonia.Model
 {
-    public class ErrorService
+    public class ErrorHandler
     {
         public event EventHandler<string> ErrorReceived;
 

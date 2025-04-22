@@ -12,19 +12,13 @@ using SzeregowaAvalonia.Views;
 
 namespace SzeregowaAvalonia.Model;
 
-public delegate void DataRecieved(byte data);
-class SerialPortManager
+class SerialPortHandler
 {
-    public static SerialPortManager Instance;
     private SerialPort _serialPort;
-    public event DataRecieved dataRecievedEvent;
+    public EventHandler<byte> dataRecievedEvent;
 
-    public SerialPortManager()
+    public SerialPortHandler()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
         _serialPort = new SerialPort();
     }
 
@@ -32,7 +26,6 @@ class SerialPortManager
     {
         return SerialPort.GetPortNames();
     }
-
 
     public void SetPortName(string value)
     {
@@ -44,6 +37,7 @@ class SerialPortManager
         {
             _serialPort.Parity = parity;
         }
+        throw new NotImplementedException("Niepoprawny typ");
     }
     public bool SetBaudRate(string value)
     {
@@ -51,8 +45,7 @@ class SerialPortManager
             _serialPort.BaudRate = baudRate;
             return true;
         }
-        return false;
-        
+        throw new NotImplementedException("Niepoprawny typ");        
     }
     public void SetDataBits(string value)
     {
@@ -61,26 +54,19 @@ class SerialPortManager
             _serialPort.DataBits = dataBits;
         } else
         {
-
+            throw new NotImplementedException("Niepoprawny typ")
         }
         
     }
     public void SetStopBits(string value)
     {
-        switch (value)
+        _serialPort.StopBits = value switch
         {
-            case "1":
-                _serialPort.StopBits = StopBits.One;
-                break;
-            case "2":
-                _serialPort.StopBits = StopBits.Two;
-                break;
-            case "1.5":
-                _serialPort.StopBits = StopBits.OnePointFive;
-                break;
-            default:
-                break;
-        }
+            "1" => StopBits.One,
+            "2" => StopBits.Two,
+            "1.5" => StopBits.OnePointFive,
+            _ => throw new NotImplementedException("Niepoprawny typ")
+        };
     }
 
 
@@ -99,6 +85,7 @@ class SerialPortManager
             return false;
         }
     }
+
     private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         try
@@ -107,29 +94,17 @@ class SerialPortManager
             while (sp.BytesToRead > 0)
             {
                 int indata = sp.ReadByte();
-                
-                dataRecievedEvent.Invoke((byte)indata);
+
+                dataRecievedEvent.Invoke(this, (byte)indata);
             }
         } catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine(ex.Message);
         }
     }
-    public void SendMessage(string message)
-    {
-        _serialPort.Write(message);
-    }
-    public void SendMessage(byte hexValue)
-    {
-        _serialPort.Write("" + (char)hexValue);
-    }
-    public void SendMessage(char value)
-    {
-        _serialPort.Write("" + value);
-    }
+
     public void ClosePort()
     {
-
         if (_serialPort != null)
         {
             if (_serialPort.IsOpen)
@@ -137,34 +112,20 @@ class SerialPortManager
                 // Odłączamy zdarzenie przed zamknięciem
                 _serialPort.DataReceived -= SerialPort_DataReceived;
                 _serialPort.Close();
-                Console.WriteLine("Port został zamknięty.");
             }
             _serialPort.Dispose();
         }
     }
-    public string GetPortName()
-    {
-        return _serialPort.PortName;
-    }
 
-    public Parity GetParity()
-    {
-        return _serialPort.Parity;
-    }
+    public void SendMessage(string message) => _serialPort.Write(message);
+    public void SendMessage(byte value) => _serialPort.Write(((char)value).ToString());
+    public void SendMessage(char value) => _serialPort.Write(value.ToString());
 
-    public int GetBaudRate()
-    {
-        return _serialPort.BaudRate;
-    }
-
-    public int GetDataBits()
-    {
-        return _serialPort.DataBits;
-    }
-
-    public StopBits GetStopBits()
-    {
-        return _serialPort.StopBits;
-    }
+    // Accessors   
+    public string GetPortName() => _serialPort.PortName;
+    public Parity GetParity() => _serialPort.Parity;
+    public int GetBaudRate() => _serialPort.BaudRate;
+    public int GetDataBits() => _serialPort.DataBits;
+    public StopBits GetStopBits() => _serialPort.StopBits;
 
 }

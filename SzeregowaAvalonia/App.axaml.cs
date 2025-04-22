@@ -19,8 +19,9 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            ErrorService errorService = new ErrorService();
-            desktop.MainWindow = new MainWindow(new MainViewModel(errorService));
+            ErrorHandler errorService = new ErrorHandler();
+            SerialPortHandler serialPortHandler = new SerialPortHandler();
+            desktop.MainWindow = new MainWindow(new MainViewModel(errorService, serialPortHandler));
 
 
         }
