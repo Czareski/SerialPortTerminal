@@ -8,15 +8,18 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO.Ports;
 
 namespace SzeregowaAvalonia.ViewModels
 {
-    public partial class SendViewModel : ObservableObject
+    public partial class SendViewModel : ViewModelBase
     {
         private string _commandText = string.Empty;
-        private CommandProcessor _commandProcessor = new CommandProcessor();
+        private CommandProcessor _commandProcessor;
+        
         [ObservableProperty]
         public ObservableCollection<Macro> _macros = new ObservableCollection<Macro>();
+        
         private MacrosService _macrosService = new MacrosService();
         public string CommandText
         {
@@ -37,11 +40,13 @@ namespace SzeregowaAvalonia.ViewModels
         private bool _isNLCRChecked;
 
         private LineEnding _selectedLineEnding;
-        public bool AreOrderButtonsVisible => IsCRChecked && IsNLChecked;
+        private bool AreOrderButtonsVisible => IsCRChecked && IsNLChecked;
+        private ErrorHandler _errorHandler { get; }
 
-
-        public SendViewModel()
+        public SendViewModel(ErrorHandler errorHandler, SerialPort serialPort)
         {
+            _errorHandler = errorHandler;
+            _commandProcessor = new CommandProcessor(serialPort);
             _macrosService.OnMacrosUpdated += UpdateMacros;
             for (int i = 0; i < 20; i++)
             {

@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.IO.Ports;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using DynamicData.Kernel;
@@ -19,9 +20,9 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            ErrorHandler errorService = new ErrorHandler();
-            SerialPortHandler serialPortHandler = new SerialPortHandler();
-            desktop.MainWindow = new MainWindow(new MainViewModel(errorService, serialPortHandler));
+            ErrorHandler errorHandler = new ErrorHandler();
+            SerialPort serialPort = new SerialPort();
+            desktop.MainWindow = new MainWindow(new MainViewModel(errorHandler, serialPort));
 
 
         }

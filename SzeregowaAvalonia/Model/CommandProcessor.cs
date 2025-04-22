@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,11 @@ namespace SzeregowaAvalonia.Model
 {
     public class CommandProcessor
     {
+        private SerialPort _serialPort;
+        public CommandProcessor(SerialPort serialPort)
+        {
+            _serialPort = serialPort;
+        }
         public void SendText(string text, LineEnding ending)
         {
             AddLineEnding(ref text, ending);
@@ -19,7 +25,7 @@ namespace SzeregowaAvalonia.Model
                 {
                     if (i > 0 && text[i - 1] == '$')
                     {
-                        SerialPortHandler.Instance.SendMessage("$");
+                        _serialPort.Write("$");
                     }
                     if (i < text.Length - 2)
                     {
@@ -31,14 +37,14 @@ namespace SzeregowaAvalonia.Model
                         }
                         else
                         {
-                            SerialPortHandler.Instance.SendMessage((byte)hex);
+                            _serialPort.Write("" + (char)hex);
                             i += 2;
                         }
                     }
                 }
                 else
                 {
-                    SerialPortHandler.Instance.SendMessage(text[i]);
+                    _serialPort.Write("" + text[i]);
                 }
             }
         }

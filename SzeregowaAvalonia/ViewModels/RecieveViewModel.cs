@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +15,23 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DynamicData;
 using SzeregowaAvalonia.Model;
 
 namespace SzeregowaAvalonia.ViewModels
 {
     public partial class RecieveViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        public TerminalOutput Terminal { get; } = new TerminalOutput();
+        private FileLogger? _fileLogger;
 
-        // true - ASCII, false - HEX | Może osobna klasa ?
-        private bool isASCIIencoded = true;
+        private List<IDataReciever> _dataOutputs;
+        
+        [ObservableProperty]
+        private string _loggingButtonContent = "Start Log";
 
-        private List<IDataOutput> _dataOutputs = [];
+        [ObservableProperty]
+        private int _bytesRecieved;
 
         private string _inputText = string.Empty;
         public string InputText
@@ -33,54 +40,38 @@ namespace SzeregowaAvalonia.ViewModels
             set
             {
                 _inputText = value;
-                OnPropertyChanged(); // lub OnPropertyChanged(nameof(InputText)) zależnie od bazy
+                OnPropertyChanged();
             }
         }
-        public TerminalOutput Terminal { get; } = new TerminalOutput();
         
-        [ObservableProperty]
-        private string _loggingButtonContent = "Start Log";
-
-        [ObservableProperty]
-        private int _bytesRecieved;
-
-        [ObservableProperty]
         private int _encoding;
-
-
-        public RecieveViewModel()
-        {
-            if (SerialPortHandler.Instance == null)
+        public int Encoding {
+            get => _encoding;
+            set
             {
-                new SerialPortHandler();
+                _encoding = value;
+                Debug.WriteLine(_encoding);
+                foreach (var reciever in _dataOutputs)
+                {
+                    reciever.SetEncoding((EncodingType)_encoding);
+                }
             }
-            _dataOutputs.Add(Terminal);
-            
-            SerialPortHandler.Instance.dataRecievedEvent += RecieveData;
         }
 
-        
+        public RecieveViewModel(ErrorHandler errorHandler, SerialPortDataReciever dataReciever)
+        {
+            _dataOutputs = [Terminal];
+            dataReciever.DataRecieved += RecieveData;
 
-        [RelayCommand]
-        private void RecieveData(byte data)
+        }
+
+        private void RecieveData(object sender, byte data)
         {
             BytesRecieved += 1;
-
-            if (Encoding == 0)
+            
+            foreach (var reciever in _dataOutputs)
             {
-                foreach (IDataOutput output in _dataOutputs)
-                {
-                    output.RecieveData(data);
-                }
-            }
-            else
-            {
-                string hexString = Convert.ToHexString(new byte[] { data }) + " ";
-                foreach (IDataOutput output in _dataOutputs)
-                {
-                    output.RecieveHexData(hexString);
-                }
-               
+                reciever.RecieveData(data);
             }
         }
 
@@ -98,38 +89,25 @@ namespace SzeregowaAvalonia.ViewModels
         }
 
         [RelayCommand]
-        public void ChangeEncoding(bool value)
-        {
-            isASCIIencoded = value;
-        }
-
-        [RelayCommand]
         public void HandleLogButton() {
-            foreach (IDataOutput output in _dataOutputs)
+            if (_fileLogger != null)
             {
-                if (output is FileLogger)
-                {
-                    FileLogger fileLogger = (FileLogger)output;
-                    
-                    fileLogger.Dispose();
-                    _dataOutputs.Remove(fileLogger);
-
-                    LoggingButtonContent = "Start Log";
-                    return;
-                }
-            }
-
-            StartFileLog();
+                _fileLogger.Dispose();
+                _dataOutputs.Remove(_fileLogger);
+                _fileLogger = null;
+                LoggingButtonContent = "Start Log";
+            } else
+            {
+                StartFileLog();
+                
+            }     
         }
 
         [RelayCommand]
         public void SearchNext()
         {
-            Terminal.SearchNext();
+            Terminal.SearchForNextOccurance();
         }
-
-
-        // ???
         public async void StartFileLog() {
             IStorageFile selectedFile = await FileDialogHandler.OpenFileDialog();
             if (selectedFile == null)

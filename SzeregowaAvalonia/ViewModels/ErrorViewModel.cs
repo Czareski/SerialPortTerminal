@@ -18,12 +18,10 @@ namespace SzeregowaAvalonia.ViewModels
         [ObservableProperty]
         public bool _isShown = false;
         public ErrorViewModel(ErrorHandler errorService) {
-            Debug.WriteLine("Error View Model");
             errorService.ErrorReceived += OnErrorReceived;
         }
         private async void OnErrorReceived(object sender, string errorMessage)
         {
-            Debug.WriteLine($"Error received ASDASd: {errorMessage}");
 
             IsShown = true;
             ErrorMessage = errorMessage;

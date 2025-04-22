@@ -16,8 +16,9 @@ namespace SzeregowaAvalonia.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
-    private ErrorHandler _errorService;
-    private bool isConnected = false;
+    private ErrorHandler _errorHandler;
+    private SerialPort _serialPort;
+
     [ObservableProperty]
     private string _connectButtonText = "Connect";
     [ObservableProperty]
@@ -35,50 +36,60 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isCustomInputEnabled;
     [ObservableProperty]
-    private string? _customBaudRate;
+    private string _customBaudRate = "";
     [ObservableProperty]
-    private string _selectedPort;
+    private string _selectedPort = "";
     public ObservableCollection<string> ComPorts { get; } = new ObservableCollection<string>();
 
-    public SettingsViewModel(ErrorHandler errorService)
+    public SettingsViewModel(ErrorHandler errorHandler, SerialPort serialPort)
     {
         System.Diagnostics.Debug.WriteLine("SettingsViewModel constructor called");
-        _errorService = errorService;
-        
-        if (SerialPortHandler.Instance == null)
-        {
-            new SerialPortHandler();
-        }
-        
-        foreach (string com in SerialPortHandler.Instance.GetPortNames())
-        {
-            ComPorts.Add(com);
-        }
+        _errorHandler = errorHandler;
+        _serialPort = serialPort;
+
+
+        ScanPorts();
 
         if (ComPorts.Count > 0)
         {
             SelectedPort = ComPorts.First();
-        } else
-        {
-            SelectedPort = "No Selected Port";
-            
         }
     }
 
     [RelayCommand]
     public void ChangeStopBits(string value)
     {
-        SerialPortHandler.Instance.SetStopBits(value);
+        _serialPort.StopBits = value switch
+        {
+            "1" => StopBits.One,
+            "2" => StopBits.Two,
+            "1.5" => StopBits.OnePointFive,
+            _ => throw new NotImplementedException("Niepoprawny typ")
+        };
     }
     [RelayCommand]
     public void ChangeParity(string value)
     {
-        SerialPortHandler.Instance.SetParity(value);
+        if (Enum.TryParse(value, out Parity parity))
+        {
+            _serialPort.Parity = parity;
+        }
+        else
+        {
+            throw new NotImplementedException("Niepoprawny typ");
+        }
     }
     [RelayCommand]
     public void ChangeDataBits(string value)
     {
-        SerialPortHandler.Instance.SetDataBits(value);
+        if (int.TryParse(value, out int dataBits))
+        {
+            _serialPort.DataBits = dataBits;
+        }
+        else
+        {
+            throw new NotImplementedException("Niepoprawny typ");
+        }
     }
     [RelayCommand]
     public void ChangeBaudRate(string value)
@@ -89,8 +100,15 @@ public partial class SettingsViewModel : ViewModelBase
         }
 
         IsCustomInputEnabled = false;
-        bool result = SerialPortHandler.Instance.SetBaudRate(value);
-        if (result && isConnected)
+        if (int.TryParse(value, out int baudRate))
+        {
+            _serialPort.BaudRate = baudRate;
+        }
+        else
+        {
+            throw new NotImplementedException("Niepoprawny typ");
+        }
+        if (_serialPort.IsOpen)
         {
             BaudRateInfo = "Baud rate: " + value;
         }
@@ -99,31 +117,34 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     public void ToggleConnectionState()
     {
-        if (isConnected)
+        if (_serialPort.IsOpen)
         {
-            SerialPortHandler.Instance.ClosePort();
-            isConnected = false;
+            _serialPort.Close();
             SetConnectionDisplay();
             return;
         }
 
-        SerialPortHandler.Instance.SetPortName(SelectedPort);
+        _serialPort.PortName = SelectedPort;
         if (IsCustomInputEnabled)
         {
-            SerialPortHandler.Instance.SetBaudRate(CustomBaudRate);
+            if (CustomBaudRate != null)
+         
+                if (int.TryParse(CustomBaudRate, out int baudRate))
+                {
+                    _serialPort.BaudRate = baudRate;
+                }
+                else
+                {
+                    throw new NotImplementedException("Niepoprawny typ");
+
+                }
         }
         
-        bool isSerialPortOpened = SerialPortHandler.Instance.OpenPort();
+        _serialPort.Open();
         
-        if (isSerialPortOpened)
+        if (_serialPort.IsOpen)
         {
-            PortNameInfo = "COM: " + SerialPortHandler.Instance.GetPortName();
-            DataBitsInfo = "Data bits: " + SerialPortHandler.Instance.GetDataBits();
-            BaudRateInfo = "Baud rate: " + SerialPortHandler.Instance.GetBaudRate();
-            ParityInfo = "Parity: " + SerialPortHandler.Instance.GetParity();
-            StopBitsInfo = "Stop bits: " + SerialPortHandler.Instance.GetStopBits();
-
-            isConnected = true;
+            UpdateConnectionInfo();
             SetConnectionDisplay();
         }
     }
@@ -131,17 +152,24 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     public void ScanPorts()
     {
-        System.Diagnostics.Debug.WriteLine("ScanPorts called");
         ComPorts.Clear();
-        foreach (string com in SerialPortHandler.Instance.GetPortNames())
+        foreach (string com in SerialPort.GetPortNames())
         {
             ComPorts.Add(com);
         }
     }
+    private void UpdateConnectionInfo()
+    {
+        PortNameInfo = "COM: " + _serialPort.PortName;
+        DataBitsInfo = "Data bits: " + _serialPort.DataBits;
+        BaudRateInfo = "Baud rate: " + _serialPort.BaudRate;
+        ParityInfo = "Parity: " + _serialPort.Parity;
+        StopBitsInfo = "Stop bits: " + _serialPort.StopBits;
+    }
     private void SetConnectionDisplay()
     {
-        ConnectButtonText = isConnected ? "Disconnect" : "Connect";
-        ConnectionStatusColor = isConnected ? "#38CA53" : "#E02923";
+        ConnectButtonText = _serialPort.IsOpen ? "Disconnect" : "Connect";
+        ConnectionStatusColor = _serialPort.IsOpen ? "#38CA53" : "#E02923";
     }
 
     

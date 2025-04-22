@@ -10,7 +10,7 @@ using SzeregowaAvalonia.ViewModels;
 
 namespace SzeregowaAvalonia.Model
 {
-    public class TerminalOutput : IDataOutput
+    public class TerminalOutput : IDataReciever
     {
         private double CHARACTER_PER_WIDTH = 8.79;
         private const int MAX_LINES = 1000;
@@ -22,6 +22,7 @@ namespace SzeregowaAvalonia.Model
         int allLines = 0;
         public ScrollLogic Scroll { get; } = new();
         public ObservableCollection<RecieveLine> Lines { get; } = [new RecieveLine(Brushes.Black)];
+        private EncodingType _encoding = EncodingType.ASCII;
 
         public void UpdateLineWidth(double value)
         {
@@ -38,20 +39,12 @@ namespace SzeregowaAvalonia.Model
                 return;
             }
 
-            Lines[Lines.Count - 1].Text += ((char)data);
+            Lines[Lines.Count - 1].Text += EncodeData(data);
 
             if (Lines[Lines.Count - 1].Text.Length >= _lineWidth)
             {
                 AddNewLine();
             }
-        }
-        public void RecieveHexData(string data)
-        {
-            if (Lines[Lines.Count - 1].Text.Length >= _lineWidth)
-            {
-                AddNewLine();
-            }
-            Lines[Lines.Count - 1].Text += data;
         }
 
         public void AddNewLine()
@@ -98,7 +91,6 @@ namespace SzeregowaAvalonia.Model
                 Scroll.autoScroll = false;
             }
         }
-        // ???
         private void SearchInLine(RecieveLine line)
         {
             if (_searchedPhrase == "") return;
@@ -121,10 +113,7 @@ namespace SzeregowaAvalonia.Model
             searchedLines.Clear();
             currentSearchIndex = 0;
         }
-        
-        
-        // slaba nazwa
-        public void SearchNext()
+        public void SearchForNextOccurance()
         {
             if (searchedLines.Count == 0) return;
             currentSearchIndex += 1;
@@ -134,6 +123,25 @@ namespace SzeregowaAvalonia.Model
             }
             // ???
             Scroll.ScrollToLine(Lines.IndexOf(searchedLines[currentSearchIndex]));
+        }
+
+        public string EncodeData(byte data)
+        {
+            string encodedData = "";
+            if (_encoding == EncodingType.HEX)
+            {
+                encodedData = Convert.ToHexString(new byte[] { data }) + " ";
+            }
+            else
+            {
+                encodedData += (char)data;
+            }
+            return encodedData;
+        }
+
+        public void SetEncoding(EncodingType encoding)
+        {
+            _encoding = encoding;
         }
     }
 }
