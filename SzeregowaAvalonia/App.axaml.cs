@@ -22,7 +22,8 @@ public partial class App : Application
         {
             ErrorHandler errorHandler = new ErrorHandler();
             SerialPort serialPort = new SerialPort();
-            desktop.MainWindow = new MainWindow(new MainViewModel(errorHandler, serialPort));
+            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow.DataContext = new MainViewModel(desktop.MainWindow, errorHandler, serialPort);
 
 
         }

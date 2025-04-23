@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 
@@ -13,11 +9,12 @@ namespace SzeregowaAvalonia.Model
 {
     public class MacrosService
     {
-        private ErrorHandler _errorService;
+        private ErrorHandler _errorHandler;
         public ObservableCollection<Macro> CurrentMacrosList;
         public event EventHandler OnMacrosUpdated;
-        public MacrosService()
+        public MacrosService(ErrorHandler errorHandler)
         {
+            _errorHandler = errorHandler;
             CurrentMacrosList = new ObservableCollection<Macro>(
                 Enumerable.Range(0, 20)
                 .Select(i => new Macro($"M{i + 1}", ""))
@@ -34,7 +31,7 @@ namespace SzeregowaAvalonia.Model
             }
             writer.Dispose();
         }
-        public async Task<Task> Import(IStorageFile file)
+        public async Task Import(IStorageFile file)
         {
             string path = file.Path.AbsolutePath;
             StreamReader reader = new StreamReader(path);
@@ -43,7 +40,8 @@ namespace SzeregowaAvalonia.Model
                 string lineContent = await reader.ReadLineAsync();
                 if (lineContent == null)
                 {
-                    throw new Exception("ZA MAŁO LINI");
+                    _errorHandler.ReportError("Niepoprawny plik makr (minimum 40linii)");
+                    return;
                 }
                 if (i % 2 == 0)
                 {
@@ -53,7 +51,7 @@ namespace SzeregowaAvalonia.Model
                     CurrentMacrosList[i / 2].Command = lineContent;
                 }
             }
-            return Task.CompletedTask;
+            return;
         }
         public Macro GetMacro(int i)
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Avalonia.Media;
 
 namespace SzeregowaAvalonia.Model
@@ -39,11 +34,25 @@ namespace SzeregowaAvalonia.Model
                 }
             }
         }
+        private IBrush _foreground = Brushes.White;
+        public IBrush Foreground
+        {
+            get => _foreground;
+            set
+            {
+                if (_foreground != value)
+                {
+                    _foreground = value;
+                    OnPropertyChanged(nameof(Foreground));
+                }
+            }
+        }
 
-        public RecieveLine(IBrush background)
+        public RecieveLine(IBrush background, IBrush foreground)
         {
             _originalBackground = background;
             Background = background;
+            Foreground = foreground;
             Text = string.Empty;
         }
         public void ResetBackground()

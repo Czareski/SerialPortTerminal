@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using SzeregowaAvalonia.ViewModels;
 
@@ -19,10 +15,9 @@ namespace SzeregowaAvalonia.Model
         private string _searchedPhrase = "";
         private List<RecieveLine> searchedLines = [];
         private int currentSearchIndex = 0;
-        int allLines = 0;
-        public ScrollLogic Scroll { get; } = new();
-        public ObservableCollection<RecieveLine> Lines { get; } = [new RecieveLine(Brushes.Black)];
         private EncodingType _encoding = EncodingType.ASCII;
+        public ScrollLogic Scroll { get; } = new();
+        public ObservableCollection<RecieveLine> Lines { get; } = [];
 
         public void UpdateLineWidth(double value)
         {
@@ -38,7 +33,10 @@ namespace SzeregowaAvalonia.Model
             {
                 return;
             }
-
+            if (Lines.Count == 0)
+            {
+                AddNewLine();
+            }
             Lines[Lines.Count - 1].Text += EncodeData(data);
 
             if (Lines[Lines.Count - 1].Text.Length >= _lineWidth)
@@ -49,7 +47,6 @@ namespace SzeregowaAvalonia.Model
 
         public void AddNewLine()
         {
-            allLines += 1;
             _lineAlternateIndex += 1;
             if (Lines.Count == MAX_LINES)
             {
@@ -58,13 +55,13 @@ namespace SzeregowaAvalonia.Model
             if (_lineAlternateIndex == 2) _lineAlternateIndex = 0;
 
             IBrush background = _lineAlternateIndex % 2 == 0 ? Brushes.Black : Brush.Parse("#0f0f0f");
-            RecieveLine newLine = new RecieveLine(background);
+            IBrush foreground = _encoding == EncodingType.ASCII ? Brushes.White : Brushes.Wheat;
+            RecieveLine newLine = new RecieveLine(background, foreground);
             
             Lines.Add(newLine);
-            newLine.Text = allLines + "> ";
             SearchInLine(newLine);
 
-            if (Scroll.autoScroll)
+            if (Scroll.AutoScroll)
             {
                 Scroll.ScrollToLine(Lines.Count - 1);
             }
@@ -72,7 +69,7 @@ namespace SzeregowaAvalonia.Model
         public void Clear()
         {
             Lines.Clear();
-            Lines.Add(new RecieveLine(Brushes.Black));
+            
             Scroll.ScrollToTop();
         }
         public void Search(string input)
@@ -86,9 +83,8 @@ namespace SzeregowaAvalonia.Model
             }
             if (searchedLines.Count > 0)
             {
-                // ??
                 Scroll.ScrollToLine(Lines.IndexOf(searchedLines[0]));
-                Scroll.autoScroll = false;
+                Scroll.AutoScroll = false;
             }
         }
         private void SearchInLine(RecieveLine line)
@@ -121,7 +117,7 @@ namespace SzeregowaAvalonia.Model
             {
                 currentSearchIndex = 0;
             }
-            // ???
+            
             Scroll.ScrollToLine(Lines.IndexOf(searchedLines[currentSearchIndex]));
         }
 

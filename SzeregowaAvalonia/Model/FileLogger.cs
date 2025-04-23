@@ -22,9 +22,9 @@ namespace SzeregowaAvalonia.Model
         }
         public void RecieveData(byte data)
         {
-            System.Diagnostics.Debug.WriteLine("File Logger otrzymał: " + data);
-            // tu kiedys wyskoczyl blad
-            _writer.Write((char)data);
+            string encoded = EncodeData(data);
+            
+            _writer.Write(encoded);
             _writer.Flush();
         }
         ~FileLogger()
@@ -43,7 +43,16 @@ namespace SzeregowaAvalonia.Model
 
         public string EncodeData(byte data)
         {
-            throw new NotImplementedException();
+            string encodedData = "";
+            if (_encoding == EncodingType.HEX)
+            {
+                encodedData = Convert.ToHexString(new byte[] { data }) + " ";
+            }
+            else
+            {
+                encodedData += (char)data;
+            }
+            return encodedData;
         }
 
         public void SetEncoding(EncodingType encoding)

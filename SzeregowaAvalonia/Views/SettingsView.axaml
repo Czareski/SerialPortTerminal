@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="850" d:DesignHeight="500"
              x:Class="SzeregowaAvalonia.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
   <Design.DataContext>
@@ -13,7 +13,7 @@
 	<Border Name="TopPanel">
 				<StackPanel Classes="TopPanel" Orientation="Vertical" HorizontalAlignment="Stretch">
 					<!-- Górna część zawsze widoczna -->
-					<Border Background="#000000" Padding="10">
+					<Border Background="{DynamicResource DarkerBackground}" Padding="10">
 						<StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
 
 							<!-- Zielone kółko po lewej -->
@@ -27,7 +27,9 @@
 									Margin="0,0,20,0"
 									DockPanel.Dock="Left"
 									Command="{Binding ToggleConnectionState}"
-									ToolTip.Tip="Połącz/Rozłącz z portem szeregowym"
+									ToolTip.Tip="Połącz/Rozłącz z portem szeregowym. Skrót: Ctrl + E"
+									Background="{DynamicResource LightButtonColor}"
+									HotKey="Ctrl+E"
 									/>
 
 							<!-- Informacje o połączeniu -->
@@ -37,30 +39,32 @@
 										Spacing="20"
 										ToolTip.Tip="Obecne parametry połączenia"
 										>
-								<TextBlock Classes="Label" Text="{Binding PortNameInfo}" Foreground="White"/>
-								<TextBlock Classes="Label" Text="{Binding BaudRateInfo}" Foreground="White"/>
-								<TextBlock Classes="Label" Text="{Binding DataBitsInfo}" Foreground="White"/>
-								<TextBlock Classes="Label" Text="{Binding StopBitsInfo}" Foreground="White"/>
-								<TextBlock Classes="Label" Text="{Binding ParityInfo}" Foreground="White"/>
+								<TextBlock Classes="Label" Text="{Binding PortNameInfo}" Foreground="{DynamicResource FontColor}"/>
+								<TextBlock Classes="Label" Text="{Binding BaudRateInfo}" Foreground="{DynamicResource FontColor}"/>
+								<TextBlock Classes="Label" Text="{Binding DataBitsInfo}" Foreground="{DynamicResource FontColor}"/>
+								<TextBlock Classes="Label" Text="{Binding StopBitsInfo}" Foreground="{DynamicResource FontColor}"/>
+								<TextBlock Classes="Label" Text="{Binding ParityInfo}" Foreground="{DynamicResource FontColor}"/>
 							</StackPanel>
 
 							<!-- Przycisk Show Configuration po prawej -->
 							<Button
 									Classes="TopPanelButton"
-									Content="Hide Config"
+									Content="Ukryj konfiguracje"
 									HorizontalAlignment="Right"
 									VerticalAlignment="Center"
 									Margin="20,0,0,0"
 									DockPanel.Dock="Right"
 									Click="TogglePanel"
 									x:Name="ToggleButton"
-									ToolTip.Tip="Rozwiń/zwiń panel konfiguarcyjny"
+									ToolTip.Tip="Rozwiń/zwiń panel konfiguarcyjny. Skrót: Ctrl + Q"
+									Background="{DynamicResource LightButtonColor}"
+									HotKey="Ctrl+Q"
 									/>
 						</StackPanel>
 					</Border>
 
 					<!-- Ukrywana dolna część -->
-					<Border x:Name="BottomPart" Background="Black" Padding="30 0 30 30">
+					<Border x:Name="BottomPart" Background="{DynamicResource DarkerBackground}" Padding="30 0 30 30">
 
 						<StackPanel>
 							<Separator Width="2000" Height="1" Background="Gray" Margin="0,0,0,20"/>
@@ -68,17 +72,20 @@
 
 
 								<StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="5">
-									<TextBlock Margin="0 0 0 10" HorizontalAlignment="Center" Height="20" Classes="Label">Serial Port:</TextBlock>
-									<ComboBox HorizontalAlignment="Center" Height="20" Width="80" ItemsSource="{Binding ComPorts}" SelectedItem="{Binding SelectedPort}"/>
+									<TextBlock Margin="0 0 0 10" HorizontalAlignment="Left" Height="20" Classes="Label">Port szeregowy:</TextBlock>
+									<ComboBox HorizontalAlignment="Center" Height="20" Width="120" ItemsSource="{Binding ComPorts}" SelectedItem="{Binding SelectedPort}" Background="{DynamicResource LightButtonColor}"/>
+									<!-- Przycisk skanu -->
 									<Button Command="{Binding ScanPorts}" Classes="TopPanelButton"
-										Width="80"
+										Width="120"
 										Height="30"
-										Content="Scan"
+										Content="Skanuj"
 										HorizontalAlignment="Center"
 										VerticalAlignment="Center"
 										ToolTip.Tip="Znajdź inne dostępne porty"
+										Background="{DynamicResource LightButtonColor}"
 									/>
 								</StackPanel>
+								<!-- Wybór prędkości -->
 								<Grid VerticalAlignment="Top"  ToolTip.Tip="Wybierz prędkość (bps)">
 									<Grid.RowDefinitions>
 										<RowDefinition />
@@ -94,13 +101,13 @@
 										<ColumnDefinition />
 										<ColumnDefinition />
 									</Grid.ColumnDefinitions>
-
-									<TextBlock Margin="0 0 0 10" Classes="Label" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">Baud Rate:</TextBlock>
+				
+									<TextBlock Margin="0 0 0 10" Classes="Label" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">Prędkość transmisji:</TextBlock>
 									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="600" Grid.Row="1" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="600" />
 									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="1200" Grid.Row="1" Grid.Column="1" Command="{Binding ChangeBaudRateCommand}" CommandParameter="1200" />
 									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="4800" Grid.Row="1" Grid.Column="3" Command="{Binding ChangeBaudRateCommand}" CommandParameter="4800" />
 									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="2400" Grid.Row="1" Grid.Column="2" Command="{Binding ChangeBaudRateCommand}" CommandParameter="2400" />
-									<RadioButton Margin="0 0 5 0" Classes="ConfigRadioButton" Content="9600" Grid.Row="1" Grid.Column="4" Command="{Binding ChangeBaudRateCommand}" CommandParameter="9600" />
+									<RadioButton Margin="0 0 5 0" IsChecked="true" Classes="ConfigRadioButton" Content="9600" Grid.Row="1" Grid.Column="4" Command="{Binding ChangeBaudRateCommand}" CommandParameter="9600" />
 
 									<RadioButton Margin="0 0 5 0" Content="19200" Grid.Row="2" Grid.Column="1" Command="{Binding ChangeBaudRateCommand}" CommandParameter="19200" />
 									<RadioButton Margin="0 0 5 0" Content="14400" Grid.Row="2" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="14400" />
@@ -113,33 +120,36 @@
 									<RadioButton Margin="0 0 5 0" Content="128000" Grid.Row="3" Grid.Column="2" Command="{Binding ChangeBaudRateCommand}" CommandParameter="128000" />
 									<RadioButton Margin="0 0 5 0" Content="256000" Grid.Row="3" Grid.Column="3" Command="{Binding ChangeBaudRateCommand}" CommandParameter="256000" />
 
-									<RadioButton Content="custom" Grid.Row="4" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="custom" />
+									<RadioButton Content="custom" Grid.Row="4" Grid.Column="0" Command="{Binding ChangeBaudRateCommand}" CommandParameter="custom" ToolTip.Tip="Niestandardowa prędkość"/>
 									<TextBox Text="{Binding CustomBaudRate}" IsEnabled="{Binding IsCustomInputEnabled}" Background="#222222" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="10 0 0 0"></TextBox>
 								</Grid>
+								<!-- Wybór bitów danych -->
 								<StackPanel HorizontalAlignment="Left" Margin="0 0 20 0" ToolTip.Tip="Wybierz liczbę bitów danych">
-									<TextBlock Margin="0 0 0 10" Classes="Label">Data Bits:</TextBlock>
+									<TextBlock Margin="0 0 0 10" Classes="Label">Bity danych:</TextBlock>
 									<StackPanel>
 										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="5" Content="5"/>
 										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="6" Content="6"/>
 										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="7" Content="7"/>
-										<RadioButton Command="{Binding ChangeDataBitsCommand}" CommandParameter="8" Content="8"/>
+										<RadioButton Command="{Binding ChangeDataBitsCommand}"  CommandParameter="8" Content="8" IsChecked="true"/>
 
 									</StackPanel>
 								</StackPanel>
+								<!-- Wybór parzystości -->
 								<StackPanel Grid.Column="3" HorizontalAlignment="Left"  ToolTip.Tip="Wybierz parzystość">
-									<TextBlock Classes="Lablel" Margin="0 0 0 10">Select Parity</TextBlock>
+									<TextBlock Classes="Lablel" Margin="0 0 0 10">Parzystość:</TextBlock>
 									<StackPanel>
-										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="None" Content="None"/>
+										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="None" Content="None" IsChecked="true"/>
 										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Odd" Content="Odd"/>
 										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Even" Content="Even"/>
 										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Mark" Content="Mark"/>
 										<RadioButton Command="{Binding ChangeParityCommand}" CommandParameter="Space" Content="Space"/>
 									</StackPanel>
 								</StackPanel>
+								<!-- Wybór bitów stopu -->
 								<StackPanel Grid.Column="4" HorizontalAlignment="Left" ToolTip.Tip="Wybierz liczbę bitów stopu">
-									<TextBlock Classes="Lablel" Margin="0 0 0 10">Select Stop Bits</TextBlock>
+									<TextBlock Classes="Lablel" Margin="0 0 0 10">Bity stopu:</TextBlock>
 									<StackPanel>
-										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="1" GroupName="StopBits" Content="1"/>
+										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="1" GroupName="StopBits" Content="1" IsChecked="true"/>
 										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="1.5" GroupName="StopBits" Content="1.5"/>
 										<RadioButton Command="{Binding ChangeStopBitsCommand}" CommandParameter="2" GroupName="StopBits" Content="2"/>
 									</StackPanel>

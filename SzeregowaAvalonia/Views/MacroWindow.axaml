@@ -6,8 +6,8 @@
         xmlns:views="clr-namespace:SzeregowaAvalonia.Views"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="460"
         x:Class="SzeregowaAvalonia.Views.MacroWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="SzeregowaAvalonia"
+        Icon="/Assets/logo.ico"
+        Title="Makra"
 		MaxHeight="460"
 		MaxWidth="500"
 		MinHeight="460"
@@ -21,9 +21,9 @@
 		<Styles>
 			
 			<Style Selector="TextBox">
-				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
 				<Setter Property="CornerRadius" Value="15"/>
-				<Setter Property="Background" Value="Black"/>
+				<Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
 				<Setter Property="Margin" Value="0 5 0 0"/>
 			</Style>
 			<Style Selector="Button.Save">
@@ -41,7 +41,7 @@
 				<Setter Property="BorderThickness" Value="2"/>
 			</Style>
 			<Style Selector="Button.Files">
-				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
 				<Setter Property="CornerRadius" Value="15"/>
 				<Setter Property="Background" Value="Transparent"/>
 				<Setter Property="BorderBrush" Value="#38CA53"/>
@@ -53,34 +53,29 @@
 			</Style>
 		</Styles>
 	</Window.Styles>
-	<Border Padding="5" Background="#222222" >
+	<Border Padding="5" Background="{DynamicResource LighterBackground}" >
 		<StackPanel Orientation="Vertical" Spacing="5">
 			<StackPanel Orientation="Horizontal" Spacing="5">
 				<Button Command="{Binding ImportCommand}" Classes="Files">
 					<StackPanel Orientation="Horizontal" Spacing="5">
-						<PathIcon Data="{StaticResource arrow_import_regular}" Foreground="White"></PathIcon>
-						<TextBlock>Import</TextBlock>
+						<PathIcon Data="{StaticResource arrow_import_regular}" Foreground="{DynamicResource FontColor}"></PathIcon>
+						<TextBlock Foreground="{DynamicResource FontColor}">Importuj</TextBlock>
 					</StackPanel>
 				</Button>
 				<Button Command="{Binding ExportCommand}" Classes="Files">
 					<StackPanel Orientation="Horizontal" Spacing="5">
-					<PathIcon Data="{StaticResource arrow_export_rtl_regular}" Foreground="White"></PathIcon>
-					<TextBlock>Export</TextBlock>
+					<PathIcon Data="{StaticResource arrow_export_rtl_regular}" Foreground="{DynamicResource FontColor}"></PathIcon>
+					<TextBlock Foreground="{DynamicResource FontColor}">Eksportuj</TextBlock>
 					</StackPanel>
 				</Button>
 			</StackPanel>
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"/>
-					<!-- Macro Left -->
 					<ColumnDefinition Width="*"/>
-					<!-- Title Left -->
 					<ColumnDefinition Width="Auto"/>
-					<!-- Separator -->
 					<ColumnDefinition Width="2*"/>
-					<!-- Macro Right -->
 					<ColumnDefinition Width="*"/>
-					<!-- Title Right -->
 				</Grid.ColumnDefinitions>
 
 				<!-- 10 rows -->
@@ -141,11 +136,11 @@
 				<TextBox Text="{Binding MacrosList[19].Command, Mode=TwoWay}" Grid.Row="9" Grid.Column="3" Watermark="Macro 20"/>
 				<TextBox Text="{Binding MacrosList[19].Title, Mode=TwoWay}" Grid.Row="9" Grid.Column="4" Watermark="Title 20" MaxLength="12"/>
 
-				<!-- Separator between columns -->
-				<Separator Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Margin="15 0 10 0" HorizontalAlignment="Center" Width="1" Height="300" Background="White" />
+				<!-- Separator -->
+				<Separator Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Margin="15 0 10 0" HorizontalAlignment="Center" Width="1" Height="300" Background="{DynamicResource FontColor}" />
 			</Grid>
 			
-			<Button HorizontalAlignment="Right" Width="100" Classes="Save" Command="{Binding SaveMacrosCommand}">Save</Button>
+			<Button ToolTip.Tip="Zapisz Makra. Skrót: Ctrl + S" HorizontalAlignment="Right" Width="100" Classes="Save" Command="{Binding SaveMacrosCommand}" HotKey="Ctrl+S">Zapisz</Button>
 		</StackPanel>
 	</Border>
 </Window>

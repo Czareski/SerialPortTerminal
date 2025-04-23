@@ -6,6 +6,24 @@
 			 >
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key='Light'>
+					<SolidColorBrush x:Key='DarkerBackground'>#d2d3db</SolidColorBrush>
+					<SolidColorBrush x:Key='LighterBackground'>#e4e5f1</SolidColorBrush>
+					<SolidColorBrush x:Key='ButtonColor'>#9394a5</SolidColorBrush>
+					<SolidColorBrush x:Key='LightButtonColor'>#9394a5</SolidColorBrush>
+					<SolidColorBrush x:Key='FontColor'>Black</SolidColorBrush>
+				</ResourceDictionary>
+				<ResourceDictionary x:Key='Dark'>
+					<SolidColorBrush x:Key='DarkerBackground'>Black</SolidColorBrush>
+					<SolidColorBrush x:Key='LighterBackground'>#222222</SolidColorBrush>
+					<SolidColorBrush x:Key='ButtonColor'>Black</SolidColorBrush>
+					<SolidColorBrush x:Key='LightButtonColor'>#222222</SolidColorBrush>
+					<SolidColorBrush x:Key='FontColor'>White</SolidColorBrush>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
+		</ResourceDictionary>
 		<Color x:Key="SystemAccentColor">#38CA53</Color>
 		<Color x:Key="SystemAccentColorLight1">#38CA53</Color>
 		<Color x:Key="SystemAccentColorLight2">#38CA53</Color>

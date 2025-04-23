@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,23 +12,26 @@ namespace SzeregowaAvalonia.ViewModels
 {
     public partial class MacroViewModel : ViewModelBase
     {
-        [ObservableProperty]
-        public ObservableCollection<Macro> _macrosList;
         private MacrosService service;
-        public MacroViewModel(MacrosService macrosService)
+        private Window _window;
+        [ObservableProperty]
+        public ObservableCollection<Macro> _macrosList = new ObservableCollection<Macro>();
+        public MacroViewModel(MacrosService macrosService, Window window)
         {
+            _window = window;
             service = macrosService;
-            MacrosList = new ObservableCollection<Macro>(
-                Enumerable.Range(0, 20)
-                .Select(i => new Macro($"M{i + 1}", ""))
-            );
+            // kopia makr z _macrosService do lokalnej listy (nie może być referencji do listy z service, ponieważ wymagane jest zatwiedzenie na przycisku Zapisz)
+            for (int i = 0; i < 20; i++)
+            {
+                MacrosList.Add(new Macro(service.CurrentMacrosList[i].Title, service.CurrentMacrosList[i].Command));
+            }
 
         }
         [RelayCommand]
         public void SaveMacros()
         {
-            Debug.WriteLine("SaveMacros");
             service.SaveMacros(MacrosList);
+            _window.Close();
         }
         [RelayCommand]
         public async void Import()

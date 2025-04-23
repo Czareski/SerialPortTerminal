@@ -3,15 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Diagnostics.Screenshots;
-using Avalonia.Dialogs;
-using Avalonia.Media;
+
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,14 +16,18 @@ namespace SzeregowaAvalonia.ViewModels
     {
         public TerminalOutput Terminal { get; } = new TerminalOutput();
         private FileLogger? _fileLogger;
-
+        private IStorageFile _selectedFile;
+        private ErrorHandler _errorHandler;
         private List<IDataReciever> _dataOutputs;
         
         [ObservableProperty]
-        private string _loggingButtonContent = "Start Log";
+        private string _loggingButtonContent = "Zapisuj do pliku";
 
         [ObservableProperty]
         private int _bytesRecieved;
+
+        [ObservableProperty]
+        public string _selectedFileName = "";
 
         private string _inputText = string.Empty;
         public string InputText
@@ -54,12 +50,15 @@ namespace SzeregowaAvalonia.ViewModels
                 foreach (var reciever in _dataOutputs)
                 {
                     reciever.SetEncoding((EncodingType)_encoding);
+                    reciever.RecieveData(0x0D);
+                    reciever.RecieveData(0x0A);
                 }
             }
         }
 
         public RecieveViewModel(ErrorHandler errorHandler, SerialPortDataReciever dataReciever)
         {
+            _errorHandler = errorHandler;
             _dataOutputs = [Terminal];
             dataReciever.DataRecieved += RecieveData;
 
@@ -87,19 +86,27 @@ namespace SzeregowaAvalonia.ViewModels
             Terminal.Clear();
             BytesRecieved = 0;
         }
+        [RelayCommand]
+        public async void SelectFile()
+        {
+            IStorageFile selectedFile = await FileDialogHandler.OpenFileDialog();
+            if (selectedFile != null)
+            {
+                _selectedFile = selectedFile;
+                SelectedFileName = _selectedFile.Name;
+                return;
+            }
+            _errorHandler.ReportError("Żaden plik nie został wybrany");
+        }
 
         [RelayCommand]
         public void HandleLogButton() {
             if (_fileLogger != null)
             {
-                _fileLogger.Dispose();
-                _dataOutputs.Remove(_fileLogger);
-                _fileLogger = null;
-                LoggingButtonContent = "Start Log";
+                StopFileLog();
             } else
             {
                 StartFileLog();
-                
             }     
         }
 
@@ -109,13 +116,23 @@ namespace SzeregowaAvalonia.ViewModels
             Terminal.SearchForNextOccurance();
         }
         public async void StartFileLog() {
-            IStorageFile selectedFile = await FileDialogHandler.OpenFileDialog();
-            if (selectedFile == null)
+            if (_selectedFile == null)
             {
+                _errorHandler.ReportError("Nie wybrano pliku");
                 return;
             }
-            LoggingButtonContent = "Stop Log";
-            _dataOutputs.Add(new FileLogger(selectedFile));
+            
+            LoggingButtonContent = "Zatrzymaj zapisywanie";
+            _fileLogger = new FileLogger(_selectedFile);
+            _fileLogger.SetEncoding((EncodingType)_encoding);
+            _dataOutputs.Add(_fileLogger);
+        }
+        public void StopFileLog()
+        {
+            _fileLogger.Dispose();
+            _dataOutputs.Remove(_fileLogger);
+            _fileLogger = null;
+            LoggingButtonContent = "Zapisuj do pliku";
         }
 
     }

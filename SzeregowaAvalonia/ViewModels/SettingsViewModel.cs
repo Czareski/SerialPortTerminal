@@ -11,6 +11,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using SzeregowaAvalonia.Model;
+using System.IO;
 
 namespace SzeregowaAvalonia.ViewModels;
 
@@ -20,17 +21,19 @@ public partial class SettingsViewModel : ViewModelBase
     private SerialPort _serialPort;
 
     [ObservableProperty]
-    private string _connectButtonText = "Connect";
+    private string _connectButtonText = "Połącz";
+
+    // wszystkie wartości -Info są wyświetlane w górnym pasku jako informacje o połączeniu
     [ObservableProperty]
-    public string _portNameInfo = "COM: not selected";
+    public string _portNameInfo = "Port: nie wybrano";
     [ObservableProperty]
-    public string _baudRateInfo = "Baud rate: not selected"; 
+    public string _baudRateInfo = "Prędkość transmisji: nie wybrano"; 
     [ObservableProperty]
-    public string _dataBitsInfo = "Data bits: not selected";
+    public string _dataBitsInfo = "Bity danych: nie wybrano";
     [ObservableProperty]
-    public string _stopBitsInfo = "Stop bits: not selected";
+    public string _stopBitsInfo = "Bity stopu: nie wybrano";
     [ObservableProperty]
-    public string _parityInfo = "Parity: not selected";
+    public string _parityInfo = "Parzystość: nie wybrano";
     [ObservableProperty]
     public string _connectionStatusColor = "#E02923";
     [ObservableProperty]
@@ -43,10 +46,14 @@ public partial class SettingsViewModel : ViewModelBase
 
     public SettingsViewModel(ErrorHandler errorHandler, SerialPort serialPort)
     {
-        System.Diagnostics.Debug.WriteLine("SettingsViewModel constructor called");
         _errorHandler = errorHandler;
         _serialPort = serialPort;
 
+        // ustanowienie domyślnych wartości
+        _serialPort.BaudRate = 9600;
+        _serialPort.DataBits = 8;
+        _serialPort.Parity = Parity.None;
+        _serialPort.StopBits = StopBits.One;
 
         ScanPorts();
 
@@ -65,6 +72,7 @@ public partial class SettingsViewModel : ViewModelBase
             "2" => StopBits.Two,
             "1.5" => StopBits.OnePointFive,
             _ => throw new NotImplementedException("Niepoprawny typ")
+            // default jest nieosiągalny
         };
     }
     [RelayCommand]
@@ -77,6 +85,7 @@ public partial class SettingsViewModel : ViewModelBase
         else
         {
             throw new NotImplementedException("Niepoprawny typ");
+            // nieosiągalne
         }
     }
     [RelayCommand]
@@ -89,6 +98,7 @@ public partial class SettingsViewModel : ViewModelBase
         else
         {
             throw new NotImplementedException("Niepoprawny typ");
+            // nieosiągalne
         }
     }
     [RelayCommand]
@@ -107,10 +117,11 @@ public partial class SettingsViewModel : ViewModelBase
         else
         {
             throw new NotImplementedException("Niepoprawny typ");
+            // nieosiągalne
         }
         if (_serialPort.IsOpen)
         {
-            BaudRateInfo = "Baud rate: " + value;
+            BaudRateInfo = "Prędkość: " + value;
         }
         
     }
@@ -123,24 +134,30 @@ public partial class SettingsViewModel : ViewModelBase
             SetConnectionDisplay();
             return;
         }
-
-        _serialPort.PortName = SelectedPort;
+        try { 
+            _serialPort.PortName = SelectedPort;
+        } catch (ArgumentNullException ex)
+        {
+            _errorHandler.ReportError("Należy wybrać port");
+            return;
+        }
         if (IsCustomInputEnabled)
         {
-            if (CustomBaudRate != null)
-         
-                if (int.TryParse(CustomBaudRate, out int baudRate))
-                {
-                    _serialPort.BaudRate = baudRate;
-                }
-                else
-                {
-                    throw new NotImplementedException("Niepoprawny typ");
-
-                }
+            bool result = SetCustomBaudRate();
+            if (!result) return;
         }
-        
-        _serialPort.Open();
+        try
+        {
+            _serialPort.Open();
+        } catch (UnauthorizedAccessException ex) 
+        {
+            _errorHandler.ReportError("Port " + _selectedPort + " jest już zajęty");
+            return;
+        } catch (IOException ex)
+        {
+            _errorHandler.ReportError("Port " + _selectedPort + " został nie znaleziony");
+            return;
+        }
         
         if (_serialPort.IsOpen)
         {
@@ -148,7 +165,27 @@ public partial class SettingsViewModel : ViewModelBase
             SetConnectionDisplay();
         }
     }
-    
+    public bool SetCustomBaudRate()
+    {
+        if (CustomBaudRate != null)
+        {
+            if (int.TryParse(CustomBaudRate, out int baudRate))
+            {
+                _serialPort.BaudRate = baudRate;
+            }
+            else
+            {
+                _errorHandler.ReportError("Podano nieprawidłowy format prędkości danych");
+                return false;
+            }
+        } else
+        {
+            _errorHandler.ReportError("Podano nieprawidłowy format prędkości danych");
+            return false;
+        }
+        return true;
+    }
+
     [RelayCommand]
     public void ScanPorts()
     {
@@ -157,14 +194,18 @@ public partial class SettingsViewModel : ViewModelBase
         {
             ComPorts.Add(com);
         }
+        if (ComPorts.Count == 0)
+        {
+            _errorHandler.ReportError("Nie znaleziono żadnego portu");
+        }
     }
     private void UpdateConnectionInfo()
     {
-        PortNameInfo = "COM: " + _serialPort.PortName;
-        DataBitsInfo = "Data bits: " + _serialPort.DataBits;
-        BaudRateInfo = "Baud rate: " + _serialPort.BaudRate;
-        ParityInfo = "Parity: " + _serialPort.Parity;
-        StopBitsInfo = "Stop bits: " + _serialPort.StopBits;
+        PortNameInfo = "Port: " + _serialPort.PortName;
+        DataBitsInfo = "Bity danych: " + _serialPort.DataBits;
+        BaudRateInfo = "Prędkość transmisji: " + _serialPort.BaudRate;
+        ParityInfo = "Parzystość: " + _serialPort.Parity;
+        StopBitsInfo = "Bity stopu: " + _serialPort.StopBits;
     }
     private void SetConnectionDisplay()
     {

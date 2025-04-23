@@ -10,11 +10,9 @@ namespace SzeregowaAvalonia.Views;
 
 public partial class MainWindow : Window
 {
-    public MainWindow(MainViewModel VM)
+    public MainWindow()
     {
         InitializeComponent();
-        DataContext = VM;
-        Debug.WriteLine(DataContext.ToString());
     }
     //private async void ShowError(object sender, RoutedEventArgs args)
     //{

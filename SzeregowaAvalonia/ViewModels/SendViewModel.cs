@@ -16,11 +16,16 @@ namespace SzeregowaAvalonia.ViewModels
     {
         private string _commandText = string.Empty;
         private CommandProcessor _commandProcessor;
+        private Window _mainWindow;
+        private LineEnding _selectedLineEnding;
+        public bool AreOrderButtonsVisible => IsCRChecked && IsNLChecked;
+        private ErrorHandler _errorHandler { get; }
+        private SerialPort _serialPort;
+        private MacrosService _macrosService;
         
+
         [ObservableProperty]
         public ObservableCollection<Macro> _macros = new ObservableCollection<Macro>();
-        
-        private MacrosService _macrosService = new MacrosService();
         public string CommandText
         {
             get => _commandText;
@@ -30,24 +35,24 @@ namespace SzeregowaAvalonia.ViewModels
                 OnPropertyChanged();
             }
         }
-
         [ObservableProperty]
         private bool _isCRChecked;
-
         [ObservableProperty]
         private bool _isNLChecked;
         [ObservableProperty]
         private bool _isNLCRChecked;
 
-        private LineEnding _selectedLineEnding;
-        private bool AreOrderButtonsVisible => IsCRChecked && IsNLChecked;
-        private ErrorHandler _errorHandler { get; }
 
-        public SendViewModel(ErrorHandler errorHandler, SerialPort serialPort)
+        public SendViewModel(Window mainWindow, ErrorHandler errorHandler, SerialPort serialPort)
         {
             _errorHandler = errorHandler;
             _commandProcessor = new CommandProcessor(serialPort);
+            _mainWindow = mainWindow;
+            _serialPort = serialPort;
+            _macrosService = new MacrosService(_errorHandler);
             _macrosService.OnMacrosUpdated += UpdateMacros;
+
+            // kopia makr z _macrosService do lokalnej listy (nie może być referencji do listy z _macrosService, ponieważ wymagane jest zatwiedzenie na przycisku Zapisz)
             for (int i = 0; i < 20; i++)
             {
                 Macros.Add(new Macro(_macrosService.CurrentMacrosList[i].Title, _macrosService.CurrentMacrosList[i].Command));
@@ -107,6 +112,11 @@ namespace SzeregowaAvalonia.ViewModels
         [RelayCommand]
         public void SendCommand()
         {
+            if (!_serialPort.IsOpen)
+            {
+                _errorHandler.ReportError("Brak połączenia z portem");
+                return;
+            }
             if (!AreOrderButtonsVisible)
             {
                 if (IsCRChecked)
@@ -124,12 +134,14 @@ namespace SzeregowaAvalonia.ViewModels
         [RelayCommand]
         public void OpenMacroWindow()
         {
+            
             var window = new MacroWindow();
-            window.DataContext = new MacroViewModel(_macrosService);
-            window.Show();
+            window.DataContext = new MacroViewModel(_macrosService, window);
+            window.ShowDialog(_mainWindow);
         }
         private void UpdateMacros(object sender, EventArgs args)
         {
+            // kopia makr z _macrosService do lokalnej listy (nie może być referencji do listy z _macrosService, ponieważ wymagane jest zatwiedzenie na przycisku Zapisz)
             for (int i = 0; i < 20; i++)
             {
                 Macros[i].Title = _macrosService.CurrentMacrosList[i].Title;
