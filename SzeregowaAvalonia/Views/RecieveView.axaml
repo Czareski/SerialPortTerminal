@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:SzeregowaAvalonia.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SzeregowaAvalonia.Views.RecieveView"
-             x:DataType="vm:RecieveViewModel">
+             x:DataType="vm:RecieveViewModel"
+			 >
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -29,23 +30,24 @@
 					<Button ToolTip.Tip="Wyczyść terminal. Skrót: Ctrl + X" Padding="7" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding Clear}" HotKey="Ctrl+X">Clear</Button>
 					<Button ToolTip.Tip="Zapisz dane w pliku. Skrót: Ctrl + L" Padding="7" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding HandleLogButton}" Content="{Binding LoggingButtonContent}" HotKey="Ctrl+L"/>
 
-					<Button ToolTip.Tip="Wybierz plik" Padding="7" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding SelectFileCommand}">
+					<Button Height="30" Width="30" ToolTip.Tip="Wybierz plik" Padding="7" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding SelectFileCommand}">
 						<PathIcon Foreground="{DynamicResource FontColor}" Data="{StaticResource folder_regular}"/>
 					</Button>
+					<TextBlock VerticalAlignment="Center" ToolTip.Tip="Nazwa wybranego pliku" Background="{DynamicResource ButtonColor}" Height="30" Text="{Binding SelectedFileName}" Padding="5" Width="150"/>
 				</StackPanel>
 
 				<!-- elementy po prawo -->
 				<StackPanel Orientation="Horizontal" Grid.Column="1"
 							HorizontalAlignment="Right" Spacing="5" VerticalAlignment="Center">
-					<CheckBox Foreground="{Binding FontColor}" IsChecked="{Binding Terminal.Scroll.AutoScroll, Mode=TwoWay}">Autoscroll</CheckBox>
+					<CheckBox Foreground="{Binding FontColor}" IsChecked="{Binding DataReciever.Terminal.Scroll.AutoScroll, Mode=TwoWay}">Autoscroll</CheckBox>
 					<TextBox ToolTip.Tip="Wyszukaj fraze w terminalu" Background="{DynamicResource ButtonColor}" Watermark="Szukaj..." Width="200" Text="{Binding InputText, Mode=TwoWay}" TextChanged="SearchFieldUpdated"/>
-					<Button ToolTip.Tip="Znajdź kolejne wystąpienie wyszukiwanej frazy: Ctrl + N" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding SearchNext}" HotKey="Ctrl+N">Next</Button>
+					<Button ToolTip.Tip="Znajdź kolejne wystąpienie wyszukiwanej frazy: Ctrl + N" Classes="RecieveViewButton" Background="{DynamicResource ButtonColor}" Command="{Binding SearchNext}" HotKey="Ctrl+N">Kolejne</Button>
 				</StackPanel>
 			</Grid>
 		</Border>
 		<!-- Terminal -->
-		<ScrollViewer VerticalAlignment="Stretch" Grid.Row="1" Offset="{Binding Terminal.Scroll.Offset}" Classes="Output" VerticalScrollBarVisibility="Auto" Margin="25 0 25 25" Background="Black" LayoutUpdated="OnLayoutUpdated">
-			<ItemsControl ItemsSource="{Binding Terminal.Lines}">
+		<ScrollViewer VerticalAlignment="Stretch" Grid.Row="1" Offset="{Binding DataReciever.Terminal.Scroll.Offset}" Classes="Output" VerticalScrollBarVisibility="Auto" Margin="25 0 25 25" Background="Black" LayoutUpdated="OnLayoutUpdated">
+			<ItemsControl ItemsSource="{Binding DataReciever.Terminal.Lines}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<SelectableTextBlock Background="{Binding Background}" Foreground="{Binding Foreground}" FontFamily="Consolas" FontSize="16" Classes="Line" Text="{Binding Text}" Margin="0" Height="18"/>

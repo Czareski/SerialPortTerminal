@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 
@@ -22,36 +24,25 @@ namespace SzeregowaAvalonia.Model
         }
         public void Export(IStorageFile file)
         {
-            string path = file.Path.AbsolutePath;
-            StreamWriter writer = new StreamWriter(path);
-            foreach (var macro in CurrentMacrosList)
+            var options = new JsonSerializerOptions
             {
-                writer.WriteLine(macro.Title);
-                writer.WriteLine(macro.Command);
-            }
-            writer.Dispose();
+                WriteIndented = true
+            };
+
+            string json = JsonSerializer.Serialize(CurrentMacrosList, options);
+            File.WriteAllText(file.Path.AbsolutePath, json);
         }
         public async Task Import(IStorageFile file)
         {
-            string path = file.Path.AbsolutePath;
-            StreamReader reader = new StreamReader(path);
-            for (int i = 0; i < 20 * 2; i++)
+            string jsonFromFile = File.ReadAllText(file.Path.AbsolutePath);
+            try
             {
-                string lineContent = await reader.ReadLineAsync();
-                if (lineContent == null)
-                {
-                    _errorHandler.ReportError("Niepoprawny plik makr (minimum 40linii)");
-                    return;
-                }
-                if (i % 2 == 0)
-                {
-                    CurrentMacrosList[i / 2].Title = lineContent;
-                } else
-                {
-                    CurrentMacrosList[i / 2].Command = lineContent;
-                }
+                CurrentMacrosList = JsonSerializer.Deserialize<ObservableCollection<Macro>>(jsonFromFile);
             }
-            return;
+            catch (Exception ex)
+            {
+                _errorHandler.ReportError("Niepoprawny plik");
+            }
         }
         public Macro GetMacro(int i)
         {

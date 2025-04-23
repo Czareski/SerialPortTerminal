@@ -19,7 +19,7 @@ public partial class RecieveView : UserControl
     {
         if (DataContext is RecieveViewModel vm && sender is Control control)
         {
-            vm.Terminal.UpdateLineWidth(control.Bounds.Width);
+            vm.DataReciever.Terminal.UpdateLineWidth(control.Bounds.Width);
         }
     }
     private void SearchFieldUpdated(object? sender, TextChangedEventArgs e)
@@ -28,7 +28,7 @@ public partial class RecieveView : UserControl
         if (DataContext is RecieveViewModel vm && sender is Control control)
         {
             string input = ((TextBox)sender).Text;
-            vm.Terminal.Search(input);
+            vm.DataReciever.Terminal.Search(input);
         }
     }
 

@@ -205,11 +205,20 @@ public partial class SettingsViewModel : ViewModelBase
         DataBitsInfo = "Bity danych: " + _serialPort.DataBits;
         BaudRateInfo = "Prędkość transmisji: " + _serialPort.BaudRate;
         ParityInfo = "Parzystość: " + _serialPort.Parity;
-        StopBitsInfo = "Bity stopu: " + _serialPort.StopBits;
+        double stopBitsToNumber = _serialPort.StopBits switch
+        {
+            StopBits.One => 1,
+            StopBits.Two => 2,
+            StopBits.OnePointFive => 1.5,
+            _ => throw new NotImplementedException("Niepoprawny typ")
+            // default jest nieosiągalny
+        };
+        StopBitsInfo = "Bity stopu: " + stopBitsToNumber;
     }
+    
     private void SetConnectionDisplay()
     {
-        ConnectButtonText = _serialPort.IsOpen ? "Disconnect" : "Connect";
+        ConnectButtonText = _serialPort.IsOpen ? "Rozłącz" : "Połącz";
         ConnectionStatusColor = _serialPort.IsOpen ? "#38CA53" : "#E02923";
     }
 

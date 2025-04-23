@@ -23,7 +23,7 @@ namespace SzeregowaAvalonia.Model
         {
             _lineWidth = Convert.ToInt32(value / CHARACTER_PER_WIDTH) - 1;
         }
-        public void RecieveData(byte data) {
+        public void RecieveData(object sender, byte data) {
             if (data == 0x0D)
             {
                 AddNewLine();
@@ -109,9 +109,9 @@ namespace SzeregowaAvalonia.Model
             searchedLines.Clear();
             currentSearchIndex = 0;
         }
-        public void SearchForNextOccurance()
+        public bool SearchForNextOccurance()
         {
-            if (searchedLines.Count == 0) return;
+            if (searchedLines.Count == 0) return false;
             currentSearchIndex += 1;
             if (currentSearchIndex >= searchedLines.Count)
             {
@@ -119,6 +119,7 @@ namespace SzeregowaAvalonia.Model
             }
             
             Scroll.ScrollToLine(Lines.IndexOf(searchedLines[currentSearchIndex]));
+            return true;
         }
 
         public string EncodeData(byte data)

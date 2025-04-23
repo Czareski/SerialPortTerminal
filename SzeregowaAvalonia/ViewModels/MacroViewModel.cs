@@ -28,10 +28,13 @@ namespace SzeregowaAvalonia.ViewModels
 
         }
         [RelayCommand]
-        public void SaveMacros()
+        public void SaveMacros(bool closeWindow)
         {
             service.SaveMacros(MacrosList);
-            _window.Close();
+            if (closeWindow)
+            {
+                _window.Close();
+            }
         }
         [RelayCommand]
         public async void Import()
@@ -57,6 +60,7 @@ namespace SzeregowaAvalonia.ViewModels
             {
                 return;
             }
+            SaveMacros(false);
             service.Export(selectedFile);
         }
 

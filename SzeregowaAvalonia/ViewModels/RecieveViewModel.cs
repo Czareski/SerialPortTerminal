@@ -14,11 +14,11 @@ namespace SzeregowaAvalonia.ViewModels
 {
     public partial class RecieveViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        public TerminalOutput Terminal { get; } = new TerminalOutput();
-        private FileLogger? _fileLogger;
+        
         private IStorageFile _selectedFile;
         private ErrorHandler _errorHandler;
-        private List<IDataReciever> _dataOutputs;
+        [ObservableProperty]
+        private SerialPortDataReciever _dataReciever;
         
         [ObservableProperty]
         private string _loggingButtonContent = "Zapisuj do pliku";
@@ -46,44 +46,33 @@ namespace SzeregowaAvalonia.ViewModels
             set
             {
                 _encoding = value;
-                Debug.WriteLine(_encoding);
-                foreach (var reciever in _dataOutputs)
-                {
-                    reciever.SetEncoding((EncodingType)_encoding);
-                    reciever.RecieveData(0x0D);
-                    reciever.RecieveData(0x0A);
-                }
+                DataReciever.SetEncoding((EncodingType)_encoding);
             }
         }
 
         public RecieveViewModel(ErrorHandler errorHandler, SerialPortDataReciever dataReciever)
         {
             _errorHandler = errorHandler;
-            _dataOutputs = [Terminal];
-            dataReciever.DataRecieved += RecieveData;
+            _dataReciever = dataReciever;
+            dataReciever.DataRecieved += IncreaseBytesRecieved;
 
         }
 
-        private void RecieveData(object sender, byte data)
+        private void IncreaseBytesRecieved(object sender, byte data)
         {
             BytesRecieved += 1;
-            
-            foreach (var reciever in _dataOutputs)
-            {
-                reciever.RecieveData(data);
-            }
         }
 
         [RelayCommand]
         public void Search()
         {
-            Terminal.Search(InputText);
+            DataReciever.Terminal.Search(InputText);
         }
 
         [RelayCommand]
         public void Clear()
         {
-            Terminal.Clear();
+            DataReciever.Terminal.Clear();
             BytesRecieved = 0;
         }
         [RelayCommand]
@@ -101,38 +90,32 @@ namespace SzeregowaAvalonia.ViewModels
 
         [RelayCommand]
         public void HandleLogButton() {
-            if (_fileLogger != null)
+            if (DataReciever.FileLogger != null)
             {
-                StopFileLog();
+                LoggingButtonContent = "Zapisuj do pliku";
+                DataReciever.StopFileLog();
             } else
             {
-                StartFileLog();
-            }     
+                if (_selectedFile == null)
+                {
+                    _errorHandler.ReportError("Nie wybrano pliku");
+                    return;
+                }
+
+                LoggingButtonContent = "Zatrzymaj zapisywanie";
+
+                DataReciever.StartFileLog(_selectedFile);
+            }
+
         }
 
         [RelayCommand]
         public void SearchNext()
         {
-            Terminal.SearchForNextOccurance();
-        }
-        public async void StartFileLog() {
-            if (_selectedFile == null)
+            if (!DataReciever.Terminal.SearchForNextOccurance())
             {
-                _errorHandler.ReportError("Nie wybrano pliku");
-                return;
+                _errorHandler.ReportError("Nie znaleziono wystąpienia");
             }
-            
-            LoggingButtonContent = "Zatrzymaj zapisywanie";
-            _fileLogger = new FileLogger(_selectedFile);
-            _fileLogger.SetEncoding((EncodingType)_encoding);
-            _dataOutputs.Add(_fileLogger);
-        }
-        public void StopFileLog()
-        {
-            _fileLogger.Dispose();
-            _dataOutputs.Remove(_fileLogger);
-            _fileLogger = null;
-            LoggingButtonContent = "Zapisuj do pliku";
         }
 
     }

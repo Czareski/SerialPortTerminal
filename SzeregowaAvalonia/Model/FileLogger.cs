@@ -8,7 +8,7 @@ using Avalonia.Platform.Storage;
 
 namespace SzeregowaAvalonia.Model
 {
-    internal class FileLogger : IDataReciever, IDisposable
+    public class FileLogger : IDataReciever, IDisposable
     {
         private IStorageFile _file;
         private StreamWriter _writer;
@@ -20,7 +20,7 @@ namespace SzeregowaAvalonia.Model
             _writer = new StreamWriter(_file.Path.AbsolutePath, append: true);
 
         }
-        public void RecieveData(byte data)
+        public void RecieveData(object sender,byte data)
         {
             string encoded = EncodeData(data);
             

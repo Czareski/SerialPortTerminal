@@ -18,12 +18,12 @@ public partial class SettingsView : UserControl
         if (_isCollapsed)
         {
             BottomPart.IsVisible = true; 
-            ToggleButton.Content = "Hide Configuration";
+            ToggleButton.Content = "Ukryj konfiguracje";
         }
         else
         {
             BottomPart.IsVisible = false; 
-            ToggleButton.Content = "Show Configuration";
+            ToggleButton.Content = "Pokaż konfiguracje";
         }
         _isCollapsed = !_isCollapsed;
     }
